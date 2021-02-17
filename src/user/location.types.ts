@@ -13,7 +13,7 @@ export const timedLocationType = {
 export const phoneType = {
   number: String,
   countryCode: String,
-  e164: { type: String, required: true },
+  e164: { type: String, required: true, unique: true },
 }
 export class TimedLocation {
   time: Date

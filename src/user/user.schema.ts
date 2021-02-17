@@ -13,8 +13,11 @@ export class User {
   @Prop({ required: true })
   email: string
 
+  @Prop({ select: false })
+  password: string
+
   @Prop({ type: phoneType, required: true })
-  phone: PhoneNumber // should be phone number type
+  phone: PhoneNumber
 
   @Prop({ type: Boolean, default: false })
   phoneNumberConfirmed: boolean
