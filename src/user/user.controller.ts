@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Post, UsePipes } from '@nestjs/common'
+import { Body, Controller, Get, NotFoundException, Post, Query, Request, UnauthorizedException, UseGuards, UsePipes } from '@nestjs/common'
+import { JwtAuthGuard } from 'src/auth/guards/jwt.auth.guard'
 import { ObjectValidationPipe } from 'src/global/pipes/object.validation.pipe'
 import { PasswordHashPipe } from 'src/global/pipes/password.hash.pipe'
 import { PhoneNumberTransformPipe } from 'src/global/pipes/phone.transform.pipe'
@@ -20,18 +21,27 @@ export class UserController {
     return createdUser
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
-  findById(id: string) {
-
+  async getUser(@Request() req) {
+    const user = req.user
+    if (user && user._id) {
+      const fetchedUser = await this.userService.findById(user._id)
+      console.log(' got user: ', fetchedUser)
+      return fetchedUser
+    } else {
+      throw new UnauthorizedException()
+    }
+    return req.user
   }
 
-  @Get()
-  findByEmail(email: string) {
-
-  }
-
-  @Get()
-  find(query: any) {
-
+  @Get('/random')
+  async findByEmail(@Query('email') email: string) {
+    console.log('getting user by email: ', email)
+    const user = await this.userService.findByEmail(email)
+    if (user) {
+      return user
+    }
+    throw new NotFoundException('User not found')
   }
 }

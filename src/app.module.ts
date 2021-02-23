@@ -6,10 +6,11 @@ import { DeliveriesModule } from './deliveries/deliveries.module'
 import { AdminModule } from './admin/admin.module'
 import { AuthModule } from './auth/auth.module'
 import { GlobalModule } from './global/global.module'
-import { AppConfigService } from './app.config.service'
+import { AppConfigService } from './appconfig/app.config.service'
 import { ConfigModule } from '@nestjs/config'
 import { MongooseModule } from '@nestjs/mongoose'
 import { logger } from './global/util/logger'
+import { AppconfigModule } from './appconfig/appconfig.module';
 
 let envFilePath = '.env'
 const ENV = process.env.NODE_ENV
@@ -26,7 +27,7 @@ if (ENV == 'development') {
       cache: true,
     }),
     MongooseModule.forRootAsync({
-      imports: [AppModule],
+      imports: [AppconfigModule],
       useFactory: async (configService: AppConfigService) => ({
         uri: configService.dbUri,
         useCreateIndex: true,
@@ -38,6 +39,7 @@ if (ENV == 'development') {
     AdminModule,
     AuthModule,
     GlobalModule,
+    AppconfigModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppConfigService],

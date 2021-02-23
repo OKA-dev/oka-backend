@@ -13,8 +13,16 @@ export class UserService {
     return createdUser.save()
   }
 
-  async findByEmail(email: string): Promise<User> {
-    return this.userModel.findOne({ email: email })
+  async findById(id: string): Promise<User> {
+    return await this.userModel.findById(id)
+  }
+
+  async findByEmail(email: string, withPassword = false): Promise<User> {
+    if (withPassword) {
+      return this.userModel.findOne({ email: email }).select('+password')
+    } else {
+      return this.userModel.findOne({ email: email })
+    }
   }
 
   async findAll(): Promise<User[]> {

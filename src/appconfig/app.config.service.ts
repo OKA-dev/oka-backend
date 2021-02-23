@@ -8,4 +8,8 @@ export class AppConfigService {
   get dbUri(): string {
     return this.configService.get('DB_URI')
   }
+
+  get jwtSecret(): string {
+    return this.configService.get('JWT_SECRET')
+  }
 }
