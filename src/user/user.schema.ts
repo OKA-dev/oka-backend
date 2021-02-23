@@ -3,6 +3,7 @@ import { Document } from 'mongoose'
 import * as mongoose from 'mongoose'
 import { phoneType, TimedLocation, timedLocationType } from './location.types'
 import { PhoneNumber } from './phonenumber'
+import { Role } from 'src/global/role.enum'
 
 export type UserDocument = User & Document
 
@@ -26,8 +27,8 @@ export class User {
   @Prop({ type: Boolean, default: false })
   phoneNumberConfirmed: boolean
 
-  @Prop([String])
-  roles: string[] // should be enum array
+  @Prop({ type: [String], default: [Role.User] })
+  roles: Role[]
 
   @Prop({ type: Boolean, default: false })
   isActiveRider: boolean

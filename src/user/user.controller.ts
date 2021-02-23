@@ -1,9 +1,22 @@
-import { Body, Controller, Get, NotFoundException, Post, Query, Request, UnauthorizedException, UseGuards, UsePipes } from '@nestjs/common'
-import { JwtAuthGuard } from 'src/auth/guards/jwt.auth.guard'
+import {
+  Body,
+  Controller,
+  Get,
+  NotFoundException,
+  Post,
+  Query,
+  Request,
+  UnauthorizedException,
+  UseGuards,
+  UsePipes,
+} from '@nestjs/common'
+import { RolesGuard } from 'src/auth/guards/roles.guard'
+import { Public } from 'src/auth/public.decorator'
 import { ObjectValidationPipe } from 'src/global/pipes/object.validation.pipe'
 import { PasswordHashPipe } from 'src/global/pipes/password.hash.pipe'
 import { PhoneNumberTransformPipe } from 'src/global/pipes/phone.transform.pipe'
-import { ValidationPipe } from 'src/global/pipes/validation.pipe'
+import { Roles } from 'src/global/role.decorator'
+import { Role } from 'src/global/role.enum'
 import { UserDto, UserDtoValidator } from './user.dto'
 import { UserService } from './user.service'
 
@@ -11,6 +24,7 @@ import { UserService } from './user.service'
 export class UserController {
   constructor(private userService: UserService) {}
 
+  @Public()
   @Post()
   @UsePipes(new ObjectValidationPipe(UserDtoValidator))
   async create(
@@ -21,7 +35,8 @@ export class UserController {
     return createdUser
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(RolesGuard)
+  @Roles(Role.User)
   @Get()
   async getUser(@Request() req) {
     const user = req.user
@@ -36,12 +51,8 @@ export class UserController {
   }
 
   @Get('/random')
+  @Roles(Role.User)
   async findByEmail(@Query('email') email: string) {
-    console.log('getting user by email: ', email)
-    const user = await this.userService.findByEmail(email)
-    if (user) {
-      return user
-    }
-    throw new NotFoundException('User not found')
+    return { status: 'ok' }
   }
 }
