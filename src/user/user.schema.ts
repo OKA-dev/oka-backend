@@ -5,7 +5,7 @@ import { phoneType, TimedLocation, timedLocationType } from './location.types'
 import { PhoneNumber } from './phonenumber'
 import { Role } from 'src/global/role.enum'
 
-export type UserDocument = User & Document
+export type UserDocument = User & mongoose.Document
 
 @Schema({ timestamps: true })
 export class User {

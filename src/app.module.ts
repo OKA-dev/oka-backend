@@ -11,6 +11,8 @@ import { ConfigModule } from '@nestjs/config'
 import { MongooseModule } from '@nestjs/mongoose'
 import { logger } from './global/util/logger'
 import { AppconfigModule } from './appconfig/appconfig.module';
+import { EventModule } from './event/event.module';
+import { EventEmitterModule } from '@nestjs/event-emitter'
 
 let envFilePath = '.env'
 const ENV = process.env.NODE_ENV
@@ -34,12 +36,14 @@ if (ENV == 'development') {
       }),
       inject: [AppConfigService],
     }),
+    EventEmitterModule.forRoot(),
     UserModule,
     DeliveriesModule,
     AdminModule,
     AuthModule,
     GlobalModule,
     AppconfigModule,
+    EventModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppConfigService],
