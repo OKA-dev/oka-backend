@@ -1,4 +1,4 @@
-import { Point } from 'src/global/models/geojson'
+import { Point } from 'src/common/models/geojson'
 
 export const pointType = {
   coordinates: [Number],

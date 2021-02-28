@@ -1,9 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
-import { Document } from 'mongoose'
 import * as mongoose from 'mongoose'
-import { phoneType, TimedLocation, timedLocationType } from './location.types'
-import { PhoneNumber } from './phonenumber'
-import { Role } from 'src/global/role.enum'
+import { Role } from 'src/common/role.enum'
+import { phoneType, timedLocationType, TimedLocation } from '../addressdata/location.types'
+import { PhoneNumber } from '../addressdata/phonenumber'
 
 export type UserDocument = User & mongoose.Document
 

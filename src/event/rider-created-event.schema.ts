@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
-import { User } from 'src/user/user.schema'
 import * as mongoose from 'mongoose'
+import { User } from 'src/models/userdata/user.schema'
 
 export type RiderCreatedEventDocument = RiderCreatedEvent & mongoose.Document
 

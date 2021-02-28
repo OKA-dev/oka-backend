@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Get,
-  NotFoundException,
   Post,
   Query,
   Request,
@@ -15,16 +14,16 @@ import { RolesGuard } from 'src/auth/guards/roles.guard'
 import { Public } from 'src/auth/public'
 import { EventType } from 'src/event/event-type.enum'
 import { UserCreatedEvent } from 'src/event/user-created-event.schema'
-import { ObjectValidationPipe } from 'src/global/pipes/object.validation.pipe'
-import { PasswordHashPipe } from 'src/global/pipes/password.hash.pipe'
-import { PhoneNumberTransformPipe } from 'src/global/pipes/phone.transform.pipe'
-import { Roles } from 'src/global/role.decorator'
-import { Role } from 'src/global/role.enum'
-import { AddressDso, AddressDto, AddressValidator } from './address.dto'
-import { AddressService } from './address.service'
-import { AddressTransformPipe } from './pipes/address.transform.pipe'
-import { UserDto, UserDtoValidator } from './user.dto'
-import { UserService } from './user.service'
+import { ObjectValidationPipe } from 'src/common/pipes/object.validation.pipe'
+import { PasswordHashPipe } from 'src/common/pipes/password.hash.pipe'
+import { PhoneNumberTransformPipe } from 'src/common/pipes/phone.transform.pipe'
+import { Roles } from 'src/common/role.decorator'
+import { Role } from 'src/common/role.enum'
+import { AddressValidator, AddressDso } from 'src/models/addressdata/address.dto'
+import { AddressService } from 'src/models/addressdata/address.service'
+import { AddressTransformPipe } from 'src/models/addressdata/pipes/address.transform.pipe'
+import { UserDtoValidator, UserDto } from 'src/models/userdata/user.dto'
+import { UserService } from '../../models/userdata/user.service'
 
 @Controller('users')
 export class UserController {
@@ -58,12 +57,11 @@ export class UserController {
     } else {
       throw new UnauthorizedException()
     }
-    return req.user
   }
 
   @Roles(Role.User)
   @UsePipes(new ObjectValidationPipe(AddressValidator))
-  @Post('/address')
+  @Post('/addresses')
   async addAddress(@Body(new AddressTransformPipe())address: AddressDso, @Request() req) {
     console.log('addresDso = ', address)
     address.user = req.user._id
@@ -72,7 +70,7 @@ export class UserController {
   }
 
   @Roles(Role.User)
-  @Get('/address')
+  @Get('/addresses')
   async getAddresses(@Request() req) {
     const addresses = await this.addressService.findAddressForUser(req.user._id)
     return addresses

@@ -1,8 +1,8 @@
 import { ForbiddenException, Injectable, NestMiddleware } from '@nestjs/common'
 import { NextFunction, Request, Response } from 'express'
-import { Role } from 'src/global/role.enum'
-import { User } from 'src/user/user.schema'
-import { UserService } from 'src/user/user.service'
+import { Role } from 'src/common/role.enum'
+import { User } from 'src/models/userdata/user.schema'
+import { UserService } from 'src/models/userdata/user.service'
 
 @Injectable()
 export class AdminValidationMiddleware implements NestMiddleware {

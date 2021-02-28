@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common'
-import { UserModule } from 'src/user/user.module'
+import { UserDataModule } from 'src/models/userdata/user.data.module'
 import { AdminController } from './admin.controller'
 
 @Module({
-  imports: [UserModule],
+  imports: [UserDataModule],
   controllers: [AdminController],
 })
-export class AdminModule {}
+export class AdminEndpointModule {}

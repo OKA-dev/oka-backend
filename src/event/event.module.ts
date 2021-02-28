@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common'
 import { MongooseModule } from '@nestjs/mongoose'
-import { UserModule } from 'src/user/user.module'
 import { GlobalEventListener } from './event.listener'
 import { Event, EventSchema } from './event.schema'
 import {
@@ -12,10 +11,11 @@ import {
   UserCreatedEventSchema,
 } from './user-created-event.schema'
 import { EventService } from './event.service';
+import { UserDataModule } from 'src/models/userdata/user.data.module'
 
 @Module({
   imports: [
-    UserModule,
+    UserDataModule,
     MongooseModule.forFeature([
       {
         name: Event.name,

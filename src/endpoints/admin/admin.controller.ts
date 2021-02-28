@@ -1,6 +1,6 @@
 import { Controller, Get, UseInterceptors } from '@nestjs/common'
-import { Roles } from 'src/global/role.decorator'
-import { Role } from 'src/global/role.enum'
+import { Roles } from 'src/common/role.decorator'
+import { Role } from 'src/common/role.enum'
 import { AdminValidationInterceptor } from './admin-validation.interceptor'
 
 @Controller('admin')

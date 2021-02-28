@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
-import { User } from 'src/user/user.schema'
 import * as mongoose from 'mongoose'
+import { User } from 'src/models/userdata/user.schema'
 
 export type UserCreatedEventDocument = UserCreatedEvent & mongoose.Document
 
@@ -12,7 +12,7 @@ export class UserCreatedEvent {
   constructor(user: User) {
     this.user = user
   }
-  
+
   @Prop({ type: mongoose.Types.ObjectId, ref: User.name, required: true })
   user: User
 }

@@ -1,5 +1,5 @@
 import * as Joi from 'joi'
-import { LatLong, Point } from 'src/global/models/geojson'
+import { LatLong, Point } from 'src/common/models/geojson'
 
 export class AddressDto {
   user: string

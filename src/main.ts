@@ -7,7 +7,7 @@ import * as helmet from 'helmet'
 import * as csurf from 'csurf'
 import * as rateLimit from 'express-rate-limit'
 import { NestExpressApplication } from '@nestjs/platform-express'
-import { AllExceptionFilter } from './global/filters/all.exception.filter'
+import { AllExceptionFilter } from './common/filters/all.exception.filter'
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule)

@@ -1,18 +1,19 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
-import { UserModule } from './user/user.module'
-import { DeliveriesModule } from './deliveries/deliveries.module'
-import { AdminModule } from './admin/admin.module'
+import { AdminEndpointModule } from './endpoints/admin/admin.endpoint.module'
 import { AuthModule } from './auth/auth.module'
-import { GlobalModule } from './global/global.module'
+import { CommonModule } from './common/common.module'
 import { AppConfigService } from './appconfig/app.config.service'
 import { ConfigModule } from '@nestjs/config'
 import { MongooseModule } from '@nestjs/mongoose'
-import { logger } from './global/util/logger'
+import { logger } from './common/util/logger'
 import { AppconfigModule } from './appconfig/appconfig.module';
 import { EventModule } from './event/event.module';
 import { EventEmitterModule } from '@nestjs/event-emitter'
+import { UserEndpointModule } from './endpoints/user/user.endpoint.module';
+import { UserDataModule } from './models/userdata/user.data.module';
+import { AddressdataModule } from './models/addressdata/address.data.module';
 
 let envFilePath = '.env'
 const ENV = process.env.NODE_ENV
@@ -37,13 +38,14 @@ if (ENV == 'development') {
       inject: [AppConfigService],
     }),
     EventEmitterModule.forRoot(),
-    UserModule,
-    DeliveriesModule,
-    AdminModule,
+    CommonModule,
+    UserEndpointModule,
+    AdminEndpointModule,
     AuthModule,
-    GlobalModule,
     AppconfigModule,
     EventModule,
+    UserDataModule,
+    AddressdataModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppConfigService],

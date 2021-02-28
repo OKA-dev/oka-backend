@@ -1,9 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { Document } from 'mongoose'
 import * as mongoose from 'mongoose'
-import { User } from 'src/user/user.schema'
-import { Point } from 'src/global/models/geojson'
-import { pointType } from './location.types'
+import { Point } from 'src/common/models/geojson'
+import { User } from '../userdata/user.schema'
 
 
 export const pointSchema = new mongoose.Schema({
