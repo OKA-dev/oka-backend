@@ -2,6 +2,21 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { Document } from 'mongoose'
 import * as mongoose from 'mongoose'
 import { User } from 'src/user/user.schema'
+import { Point } from 'src/global/models/geojson'
+import { pointType } from './location.types'
+
+
+export const pointSchema = new mongoose.Schema({
+  type: {
+    type: String,
+    enum: ['Point'],
+    required: true,
+  },
+  coordinates: {
+    type: [Number],
+    required: true,
+  },
+}, { _id: false })
 
 export type AddressDocument = Address & Document
 
@@ -26,10 +41,16 @@ export class Address {
   state?: string
 
   @Prop()
-  country: string
+  postalCode?: string
 
   @Prop()
+  country: string
+
+  @Prop({ default: false })
   isDefault: boolean
+
+  @Prop({ type: pointSchema })
+  location: Point
 }
 
 export const AddressSchema = SchemaFactory.createForClass(Address)

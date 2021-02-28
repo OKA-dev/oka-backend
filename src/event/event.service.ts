@@ -19,8 +19,8 @@ export class EventService {
     private riderCreatedModel: Model<RiderCreatedEventDocument>,
   ) {}
 
-  async saveUserCreatedEvent(event: UserCreatedEvent) {
+  async saveUserCreatedEvent(event: UserCreatedEvent): Promise<UserCreatedEvent> {
     const newModel = await this.userCreatedModel.create(event)
-    newModel.save()
+    return newModel.save()
   }
 }

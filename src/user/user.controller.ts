@@ -20,6 +20,9 @@ import { PasswordHashPipe } from 'src/global/pipes/password.hash.pipe'
 import { PhoneNumberTransformPipe } from 'src/global/pipes/phone.transform.pipe'
 import { Roles } from 'src/global/role.decorator'
 import { Role } from 'src/global/role.enum'
+import { AddressDso, AddressDto, AddressValidator } from './address.dto'
+import { AddressService } from './address.service'
+import { AddressTransformPipe } from './pipes/address.transform.pipe'
 import { UserDto, UserDtoValidator } from './user.dto'
 import { UserService } from './user.service'
 
@@ -27,6 +30,7 @@ import { UserService } from './user.service'
 export class UserController {
   constructor(
     private userService: UserService,
+    private addressService: AddressService,
     private eventEmitter: EventEmitter2,
   ) {}
 
@@ -38,7 +42,7 @@ export class UserController {
   ) {
     const createdUser = await this.userService.create(user)
     createdUser.password = undefined
-    this.eventEmitter.emit(EventType.UserAccountCreated, new UserCreatedEvent())
+    this.eventEmitter.emit(EventType.UserAccountCreated, new UserCreatedEvent(createdUser))
     return createdUser
   }
 
@@ -55,6 +59,23 @@ export class UserController {
       throw new UnauthorizedException()
     }
     return req.user
+  }
+
+  @Roles(Role.User)
+  @UsePipes(new ObjectValidationPipe(AddressValidator))
+  @Post('/address')
+  async addAddress(@Body(new AddressTransformPipe())address: AddressDso, @Request() req) {
+    console.log('addresDso = ', address)
+    address.user = req.user._id
+    const saved = await this.addressService.save(address)
+    return saved
+  }
+
+  @Roles(Role.User)
+  @Get('/address')
+  async getAddresses(@Request() req) {
+    const addresses = await this.addressService.findAddressForUser(req.user._id)
+    return addresses
   }
 
   @Get('/random')

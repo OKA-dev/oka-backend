@@ -9,6 +9,10 @@ export class UserCreatedEvent {
   kind: string
   time: Date
 
+  constructor(user: User) {
+    this.user = user
+  }
+  
   @Prop({ type: mongoose.Types.ObjectId, ref: User.name, required: true })
   user: User
 }

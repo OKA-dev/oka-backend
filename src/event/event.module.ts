@@ -20,14 +20,14 @@ import { EventService } from './event.service';
       {
         name: Event.name,
         schema: EventSchema,
-        // discriminators: [
-        //   { name: UserCreatedEvent.name, schema: UserCreatedEventSchema },
-        //   { name: RiderCreatedEvent.name, schema: RiderCreatedEventSchema },
-        // ],
+        discriminators: [
+          { name: UserCreatedEvent.name, schema: UserCreatedEventSchema },
+          { name: RiderCreatedEvent.name, schema: RiderCreatedEventSchema },
+        ],
       },
       // TODO: use discriminators instead of registering schemas independently
-      { name: UserCreatedEvent.name, schema: UserCreatedEventSchema },
-      { name: RiderCreatedEvent.name, schema: RiderCreatedEventSchema },
+      // { name: UserCreatedEvent.name, schema: UserCreatedEventSchema },
+      // { name: RiderCreatedEvent.name, schema: RiderCreatedEventSchema },
     ]),
   ],
   providers: [GlobalEventListener, EventService],

@@ -39,3 +39,13 @@ export class Polygon {
     this.coordinates = coordinates
   }
 }
+
+export const pointType = {
+  type: { type: ['Point'], required: true },
+  coordinates: { type: [Number], required: true },
+}
+
+export class LatLong {
+  lat: number
+  long: number
+}

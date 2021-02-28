@@ -1,8 +1,8 @@
 import { Point } from 'src/global/models/geojson'
 
 export const pointType = {
-  coordinates: { type: [Number], required: true },
-  type: { type: ['Point'], required: true },
+  coordinates: [Number],
+  type: {type: ['Point'], required: true },
 }
 
 export const timedLocationType = {
@@ -15,6 +15,7 @@ export const phoneType = {
   countryCode: String,
   e164: { type: String, required: true, unique: true },
 }
+
 export class TimedLocation {
   time: Date
   geolocation: Point

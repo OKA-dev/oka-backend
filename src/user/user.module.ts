@@ -4,6 +4,7 @@ import { Address, AddressSchema } from './address.schema'
 import { User, UserSchema } from './user.schema'
 import { UserService } from './user.service'
 import { UserController } from './user.controller'
+import { AddressService } from './address.service'
 
 @Module({
   imports: [
@@ -12,7 +13,7 @@ import { UserController } from './user.controller'
       { name: Address.name, schema: AddressSchema },
     ]),
   ],
-  providers: [UserService],
+  providers: [UserService, AddressService],
   exports: [UserService],
   controllers: [UserController],
 })
