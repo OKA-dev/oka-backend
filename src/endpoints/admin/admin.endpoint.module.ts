@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common'
-import { UserDataModule } from 'src/models/userdata/user.data.module'
+import { UserDataModule } from 'src/data/userdata/user.data.module'
 import { AdminController } from './admin.controller'
 
 @Module({

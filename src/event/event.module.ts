@@ -11,7 +11,7 @@ import {
   UserCreatedEventSchema,
 } from './user-created-event.schema'
 import { EventService } from './event.service';
-import { UserDataModule } from 'src/models/userdata/user.data.module'
+import { UserDataModule } from 'src/data/userdata/user.data.module'
 
 @Module({
   imports: [

@@ -7,8 +7,8 @@ import {
 } from '@nestjs/common'
 import { Observable } from 'rxjs'
 import { Role } from 'src/common/role.enum'
-import { User } from 'src/models/userdata/user.schema'
-import { UserService } from 'src/models/userdata/user.service'
+import { User } from 'src/data/userdata/user.schema'
+import { UserService } from 'src/data/userdata/user.service'
 
 @Injectable()
 export class AdminValidationInterceptor implements NestInterceptor {

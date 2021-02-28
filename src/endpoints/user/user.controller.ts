@@ -6,7 +6,6 @@ import {
   Query,
   Request,
   UnauthorizedException,
-  UseGuards,
   UsePipes,
 } from '@nestjs/common'
 import { EventEmitter2 } from '@nestjs/event-emitter'
@@ -19,11 +18,11 @@ import { PasswordHashPipe } from 'src/common/pipes/password.hash.pipe'
 import { PhoneNumberTransformPipe } from 'src/common/pipes/phone.transform.pipe'
 import { Roles } from 'src/common/role.decorator'
 import { Role } from 'src/common/role.enum'
-import { AddressValidator, AddressDso } from 'src/models/addressdata/address.dto'
-import { AddressService } from 'src/models/addressdata/address.service'
-import { AddressTransformPipe } from 'src/models/addressdata/pipes/address.transform.pipe'
-import { UserDtoValidator, UserDto } from 'src/models/userdata/user.dto'
-import { UserService } from '../../models/userdata/user.service'
+import { AddressValidator, AddressDso } from 'src/data/addressdata/address.dto'
+import { AddressService } from 'src/data/addressdata/address.service'
+import { AddressTransformPipe } from 'src/data/addressdata/pipes/address.transform.pipe'
+import { UserDtoValidator, UserDto } from 'src/data/userdata/user.dto'
+import { UserService } from '../../data/userdata/user.service'
 
 @Controller('users')
 export class UserController {
@@ -45,15 +44,12 @@ export class UserController {
     return createdUser
   }
 
-  // @UseGuards(RolesGuard)
   @Roles(Role.User)
   @Get()
   async getUser(@Request() req) {
     const user = req.user
     if (user && user._id) {
-      const fetchedUser = await this.userService.findById(user._id)
-      console.log(' got user: ', fetchedUser)
-      return fetchedUser
+      return await this.userService.findById(user._id)
     } else {
       throw new UnauthorizedException()
     }
@@ -63,17 +59,14 @@ export class UserController {
   @UsePipes(new ObjectValidationPipe(AddressValidator))
   @Post('/addresses')
   async addAddress(@Body(new AddressTransformPipe())address: AddressDso, @Request() req) {
-    console.log('addresDso = ', address)
     address.user = req.user._id
-    const saved = await this.addressService.save(address)
-    return saved
+    return await this.addressService.save(address)
   }
 
   @Roles(Role.User)
   @Get('/addresses')
   async getAddresses(@Request() req) {
-    const addresses = await this.addressService.findAddressForUser(req.user._id)
-    return addresses
+    return await this.addressService.findAddressForUser(req.user._id)
   }
 
   @Get('/random')

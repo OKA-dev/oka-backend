@@ -10,7 +10,7 @@ import { JwtStrategy } from './strategies/jwt.strategy'
 import { JwtAuthGuard } from './guards/jwt.auth.guard'
 import { RolesGuard } from './guards/roles.guard'
 import { UserEndpointModule } from 'src/endpoints/user/user.endpoint.module'
-import { UserDataModule } from 'src/models/userdata/user.data.module'
+import { UserDataModule } from 'src/data/userdata/user.data.module'
 
 @Module({
   imports: [
@@ -22,7 +22,7 @@ import { UserDataModule } from 'src/models/userdata/user.data.module'
       imports: [AppconfigModule],
       useFactory: async (configService: AppConfigService) => ({
         secret: configService.jwtSecret,
-        signOptions: { expiresIn: '1h' },
+        signOptions: { expiresIn: '12h' },
       }),
       inject: [AppConfigService],
     }),

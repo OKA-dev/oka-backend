@@ -4,7 +4,7 @@ import {
   Injectable,
   PipeTransform,
 } from '@nestjs/common'
-import { UserDto } from 'src/models/userdata/user.dto'
+import { UserDto } from 'src/data/userdata/user.dto'
 import { Hasher } from '../util/hasher'
 
 @Injectable()

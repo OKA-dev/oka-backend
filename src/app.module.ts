@@ -12,8 +12,8 @@ import { AppconfigModule } from './appconfig/appconfig.module';
 import { EventModule } from './event/event.module';
 import { EventEmitterModule } from '@nestjs/event-emitter'
 import { UserEndpointModule } from './endpoints/user/user.endpoint.module';
-import { UserDataModule } from './models/userdata/user.data.module';
-import { AddressdataModule } from './models/addressdata/address.data.module';
+import { UserDataModule } from './data/userdata/user.data.module';
+import { AddressdataModule } from './data/addressdata/address.data.module';
 
 let envFilePath = '.env'
 const ENV = process.env.NODE_ENV
