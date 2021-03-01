@@ -1,3 +1,5 @@
+import { ApiProperty } from "@nestjs/swagger"
+
 
 export type NumberPair = [number, number]
 
@@ -12,6 +14,7 @@ enum GeoType {
 
 export class Point {
   type: GeoType
+  @ApiProperty({ type: [Number] })
   coordinates: NumberPair
 
   constructor(lng: number, lat: number) {
@@ -46,6 +49,8 @@ export const pointType = {
 }
 
 export class LatLong {
+  @ApiProperty()
   lat: number
+  @ApiProperty()
   long: number
 }

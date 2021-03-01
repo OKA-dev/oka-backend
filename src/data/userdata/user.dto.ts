@@ -1,11 +1,14 @@
+import { ApiProperty } from '@nestjs/swagger'
 import { IsEmail, IsInt, IsObject, IsString } from 'class-validator'
 import * as Joi from 'joi'
 
 export class PhoneNumberDto {
   @IsInt()
+  @ApiProperty()
   number: string
 
   @IsInt()
+  @ApiProperty()
   countryCode: string
 
   e164: string
@@ -13,15 +16,19 @@ export class PhoneNumberDto {
 
 export class UserDto {
   @IsString()
+  @ApiProperty()
   name: string
 
   @IsEmail()
+  @ApiProperty()
   email: string
 
   @IsString()
+  @ApiProperty()
   password: string
 
   @IsObject()
+  @ApiProperty()
   phone: PhoneNumberDto
 }
 

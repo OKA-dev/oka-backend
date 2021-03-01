@@ -37,6 +37,7 @@ function configureSwagger(app: INestApplication) {
     .addTag('Users')
     .addTag('Deliveries')
     .addTag('Admin')
+    .addTag('Auth')
     .build()
 
   const document = SwaggerModule.createDocument(app, config)

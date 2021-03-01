@@ -18,12 +18,14 @@ import { PasswordHashPipe } from 'src/common/pipes/password.hash.pipe'
 import { PhoneNumberTransformPipe } from 'src/common/pipes/phone.transform.pipe'
 import { Roles } from 'src/common/role.decorator'
 import { Role } from 'src/common/role.enum'
-import { AddressValidator, AddressDso } from 'src/data/addressdata/address.dto'
+import { AddressValidator, AddressDso, AddressDto } from 'src/data/addressdata/address.dto'
 import { AddressService } from 'src/data/addressdata/address.service'
 import { AddressTransformPipe } from 'src/data/addressdata/pipes/address.transform.pipe'
 import { UserDtoValidator, UserDto } from 'src/data/userdata/user.dto'
 import { UserService } from '../../data/userdata/user.service'
+import { ApiBody, ApiTags } from '@nestjs/swagger'
 
+@ApiTags('Users')
 @Controller('users')
 export class UserController {
   constructor(
@@ -57,6 +59,7 @@ export class UserController {
 
   @Roles(Role.User)
   @UsePipes(new ObjectValidationPipe(AddressValidator))
+  @ApiBody({ type: AddressDto })
   @Post('/addresses')
   async addAddress(@Body(new AddressTransformPipe())address: AddressDso, @Request() req) {
     address.user = req.user._id

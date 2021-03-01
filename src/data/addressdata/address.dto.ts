@@ -1,15 +1,25 @@
+import { ApiProperty } from '@nestjs/swagger'
 import * as Joi from 'joi'
 import { LatLong, Point } from 'src/common/models/geojson'
 
 export class AddressDto {
   user: string
+  @ApiProperty({ description: 'The name for this address. E.g. "Home" or "Work"' })
   label: string
+  @ApiProperty()
   line1: string
+  @ApiProperty()
   line2?: string
+  @ApiProperty()
   city: string
+  @ApiProperty()
   state?: string
+  @ApiProperty()
+  postalCode: string
+  @ApiProperty()
   country: string
   isDefault: boolean
+  @ApiProperty()
   location: LatLong
 }
 
@@ -20,6 +30,7 @@ export class AddressDso {
   line2?: string
   city: string
   state?: string
+  postalCode: string
   country: string
   isDefault: boolean
   location: Point 
