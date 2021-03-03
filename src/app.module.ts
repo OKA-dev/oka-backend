@@ -14,6 +14,8 @@ import { EventEmitterModule } from '@nestjs/event-emitter'
 import { UserEndpointModule } from './endpoints/user/user.endpoint.module';
 import { UserDataModule } from './data/userdata/user.data.module';
 import { AddressdataModule } from './data/addressdata/address.data.module';
+import { DeliverydataModule } from './data/deliverydata/deliverydata.module';
+import { DeliveryModule } from './endpoints/delivery/delivery.module';
 
 let envFilePath = '.env'
 const ENV = process.env.NODE_ENV
@@ -46,6 +48,8 @@ if (ENV == 'development') {
     EventModule,
     UserDataModule,
     AddressdataModule,
+    DeliverydataModule,
+    DeliveryModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppConfigService],

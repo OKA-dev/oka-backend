@@ -4,6 +4,13 @@ import { Role } from 'src/common/role.enum'
 import { phoneType, timedLocationType, TimedLocation } from '../addressdata/location.types'
 import { PhoneNumber } from '../addressdata/phonenumber'
 
+export enum UserAccountType {
+  Email = 'email',
+  Google = 'google',
+  Facebook = 'facebook',
+  Apple = 'apple',
+}
+
 export type UserDocument = User & mongoose.Document
 
 @Schema({ timestamps: true })
@@ -41,8 +48,8 @@ export class User {
   @Prop({
     type: String,
     required: true,
-    enum: ['email', 'google', 'facebook', 'apple'],
-    default: 'email',
+    enum: Object.values(UserAccountType),
+    default: UserAccountType.Email
   })
   accountType: string
 }

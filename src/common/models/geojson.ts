@@ -17,9 +17,9 @@ export class Point {
   @ApiProperty({ type: [Number] })
   coordinates: NumberPair
 
-  constructor(lng: number, lat: number) {
+  constructor(longitude: number, latitude: number) {
     this.type = GeoType.Point
-    this.coordinates = [lng, lat]
+    this.coordinates = [longitude, latitude]
   }
 }
 
@@ -50,7 +50,7 @@ export const pointType = {
 
 export class LatLong {
   @ApiProperty()
-  lat: number
+  latitude: number
   @ApiProperty()
-  long: number
+  longitude: number
 }

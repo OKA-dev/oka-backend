@@ -3,7 +3,6 @@ import * as Joi from 'joi'
 import { LatLong, Point } from 'src/common/models/geojson'
 
 export class AddressDto {
-  user: string
   @ApiProperty({ description: 'The name for this address. E.g. "Home" or "Work"' })
   label: string
   @ApiProperty()
@@ -15,7 +14,7 @@ export class AddressDto {
   @ApiProperty()
   state?: string
   @ApiProperty()
-  postalCode: string
+  postalCode?: string
   @ApiProperty()
   country: string
   isDefault: boolean
@@ -24,26 +23,26 @@ export class AddressDto {
 }
 
 export class AddressDso {
-  user: string
+  user?: string
   label: string
   line1: string
   line2?: string
   city: string
   state?: string
-  postalCode: string
+  postalCode?: string
   country: string
-  isDefault: boolean
+  isDefault?: boolean
   location: Point 
 
   static createDso(dto: AddressDto) {
-    let dso: AddressDso = {... dto, location: new Point(dto.location.long, dto.location.lat)}
+    let dso: AddressDso = {... dto, location: new Point(dto.location.longitude, dto.location.latitude)}
     return dso
   } 
 }
 
 export const LatLongValidator = Joi.object({
-  lat: Joi.number().required(),
-  long: Joi.number().required()
+  latitude: Joi.number().required(),
+  longitude: Joi.number().required()
 })
 
 export const AddressValidator = Joi.object({
