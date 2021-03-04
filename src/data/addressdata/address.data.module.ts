@@ -12,4 +12,4 @@ import { AddressService } from './address.service';
   providers: [AddressService],
   exports: [AddressService],
 })
-export class AddressdataModule {}
+export class AddressDataModule {}
