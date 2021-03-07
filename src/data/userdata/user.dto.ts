@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { IsEmail, IsInt, IsObject, IsString } from 'class-validator'
 import * as Joi from 'joi'
+import { Role } from 'src/common/role.enum'
 
 export class PhoneNumberDto {
   @IsInt()
@@ -30,6 +31,8 @@ export class UserDto {
   @IsObject()
   @ApiProperty()
   phone: PhoneNumberDto
+
+  roles?: Role[]
 }
 
 export const PhoneNumberValidator = Joi.object({

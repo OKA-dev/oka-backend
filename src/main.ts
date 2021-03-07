@@ -16,7 +16,7 @@ async function bootstrap() {
   app.set('trust proxy', 1)
   app.use(
     rateLimit({
-      windowMs: 1 * 60 * 1000,
+      windowMs: 1 * 30 * 1000,
       max: 30, // limit each IP to 30 requests per windowMs (60 seconds)
     }),
   )
@@ -35,6 +35,7 @@ function configureSwagger(app: INestApplication) {
     .setDescription('OKA Delivery Services')
     .setVersion('1.0')
     .addTag('Users')
+    .addTag('Riders')
     .addTag('Deliveries')
     .addTag('Admin')
     .addTag('Auth')

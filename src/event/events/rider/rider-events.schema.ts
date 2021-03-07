@@ -11,6 +11,10 @@ export class RiderCreatedEvent {
 
   @Prop({ type: mongoose.Types.ObjectId, ref: User.name, required: true })
   rider: User
+
+  constructor(rider: User) {
+    this.rider = rider
+  }
 }
 
 export const RiderCreatedEventSchema = SchemaFactory.createForClass(

@@ -1,7 +1,10 @@
 import {
   Body,
   Controller,
+  Delete,
+  ForbiddenException,
   Get,
+  Param,
   Post,
   Query,
   Request,
@@ -12,7 +15,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter'
 import { RolesGuard } from 'src/auth/guards/roles.guard'
 import { Public } from 'src/auth/public'
 import { EventType } from 'src/event/event-type.enum'
-import { UserCreatedEvent } from 'src/event/user-created-event.schema'
+import { UserCreatedEvent } from 'src/event/events/user/user-events.schema'
 import { ObjectValidationPipe } from 'src/common/pipes/object.validation.pipe'
 import { PasswordHashPipe } from 'src/common/pipes/password.hash.pipe'
 import { PhoneNumberTransformPipe } from 'src/common/pipes/phone.transform.pipe'
@@ -70,6 +73,16 @@ export class UserController {
   @Get('/addresses')
   async getAddresses(@Request() req) {
     return await this.addressService.findAddressForUser(req.user._id)
+  }
+  
+  @Roles(Role.User)
+  @Delete('/addresses/:id')
+  async deleteAddress(@Param() params, @Request() req) {
+    const address = await this.addressService.findOne(params.id)
+    if (address.user._id !== req.user._id) {
+      throw new ForbiddenException()
+    }
+    return await this.addressService.deleteAddress(params.id)
   }
 
   @Get('/random')

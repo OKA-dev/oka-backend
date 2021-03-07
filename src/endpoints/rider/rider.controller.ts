@@ -10,7 +10,7 @@ import { Role } from 'src/common/role.enum';
 import { UserDtoValidator, UserDto } from 'src/data/userdata/user.dto';
 import { UserService } from 'src/data/userdata/user.service';
 import { EventType } from 'src/event/event-type.enum';
-import { UserCreatedEvent } from 'src/event/user-created-event.schema';
+import { UserCreatedEvent } from 'src/event/events/user/user-events.schema';
 
 @ApiTags('Riders')
 @Controller('riders')

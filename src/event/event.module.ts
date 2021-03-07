@@ -5,13 +5,31 @@ import { Event, EventSchema } from './event.schema'
 import {
   RiderCreatedEvent,
   RiderCreatedEventSchema,
-} from './rider-created-event.schema'
+} from './events/rider/rider-events.schema'
 import {
   UserCreatedEvent,
   UserCreatedEventSchema,
-} from './user-created-event.schema'
+} from './events/user/user-events.schema'
 import { EventService } from './event.service';
 import { UserDataModule } from 'src/data/userdata/user.data.module'
+import { 
+  DeliveryCancelledEvent, 
+  DeliveryCancelledEventSchema, 
+  DeliveryConfirmedEvent, 
+  DeliveryConfirmedEventSchema, 
+  DeliveryCreatedEvent, 
+  DeliveryCreatedEventSchema,
+  DeliveryDroppedOffEvent, 
+  DeliveryDroppedOffEventSchema, 
+  DeliveryPickedUpEvent, 
+  DeliveryPickedUpEventSchema,
+  DeliveryProblemEvent,
+  DeliveryProblemEventSchema,
+  DeliveryRiderCancelledEvent,
+  DeliveryRiderCancelledEventSchema,
+  DeliveryRiderProblemEvent,
+  DeliveryRiderProblemEventSchema
+} from './events/delivery/delivery-events.schema'
 
 @Module({
   imports: [
@@ -21,13 +39,18 @@ import { UserDataModule } from 'src/data/userdata/user.data.module'
         name: Event.name,
         schema: EventSchema,
         discriminators: [
-          { name: UserCreatedEvent.name, schema: UserCreatedEventSchema },
-          { name: RiderCreatedEvent.name, schema: RiderCreatedEventSchema },
+          {name: UserCreatedEvent.name, schema: UserCreatedEventSchema},
+          {name: RiderCreatedEvent.name, schema: RiderCreatedEventSchema},
+          {name: DeliveryCreatedEvent.name, schema: DeliveryCreatedEventSchema},
+          {name: DeliveryCancelledEvent.name, schema: DeliveryCancelledEventSchema},
+          {name: DeliveryRiderCancelledEvent.name, schema: DeliveryRiderCancelledEventSchema},
+          {name: DeliveryConfirmedEvent.name, schema: DeliveryConfirmedEventSchema},
+          {name: DeliveryPickedUpEvent.name, schema: DeliveryPickedUpEventSchema},
+          {name: DeliveryDroppedOffEvent.name, schema: DeliveryDroppedOffEventSchema},
+          {name: DeliveryProblemEvent.name, schema: DeliveryProblemEventSchema},
+          {name: DeliveryRiderProblemEvent.name, schema: DeliveryRiderProblemEventSchema},
         ],
       },
-      // TODO: use discriminators instead of registering schemas independently
-      // { name: UserCreatedEvent.name, schema: UserCreatedEventSchema },
-      // { name: RiderCreatedEvent.name, schema: RiderCreatedEventSchema },
     ]),
   ],
   providers: [GlobalEventListener, EventService],

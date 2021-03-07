@@ -1,4 +1,5 @@
 import * as Joi from 'joi'
+import { string } from 'joi';
 import { AddressDso, AddressDto, LatLongValidator } from '../addressdata/address.dto';
 
 export class DeliveryDto {
@@ -33,4 +34,12 @@ export const DeliveryAddressValidator = Joi.object({
 export const DeliveryDtoValidator = Joi.object({
   start: DeliveryAddressValidator.required(),
   end: DeliveryAddressValidator.required()
+})
+
+export const DeliveryReasonValidator = Joi.object({
+  reason: Joi.string().required(),
+})
+
+export const DelieryProblemValidator = Joi.object({
+  message: Joi.string().required()
 })

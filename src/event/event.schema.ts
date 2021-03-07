@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import * as mongoose from 'mongoose'
-import { RiderCreatedEvent } from './rider-created-event.schema'
-import { UserCreatedEvent } from './user-created-event.schema'
+import { RiderCreatedEvent } from './events/rider/rider-events.schema'
+import { UserCreatedEvent } from './events/user/user-events.schema'
 
 export type EventDocument = Event & mongoose.Document
 
@@ -19,13 +19,3 @@ export class Event {
 }
 
 export const EventSchema = SchemaFactory.createForClass(Event)
-// registerEventDiscriminator()
-// export enum EventKind {
-//   UserCreated = 'usercreated',
-//   RiderCreated = 'ridercreated',
-// }
-
-// function registerEventDiscriminator(arr: mongoose.Schema.Types.DocumentArray) {
-//   arr.discriminator(EventKind.UserCreated, UserCreatedEventSchema)
-//   arr.discriminator(EventKind.RiderCreated, RiderCreatedEventSchema)
-// }

@@ -37,10 +37,13 @@ if (ENV == 'development') {
       useFactory: async (configService: AppConfigService) => ({
         uri: configService.dbUri,
         useCreateIndex: true,
+        useFindAndModify: false,
       }),
       inject: [AppConfigService],
     }),
-    EventEmitterModule.forRoot(),
+    EventEmitterModule.forRoot({
+      wildcard: true,
+    }),
     CommonModule,
     UserEndpointModule,
     AdminEndpointModule,

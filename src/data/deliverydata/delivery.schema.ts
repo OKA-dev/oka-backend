@@ -16,6 +16,13 @@ export enum DeliveryStatus {
   Issue = 'Issue',
 }
 
+export enum DeliveryProblemType {
+  Loss = 'loss',
+  Theft = 'theft',
+  Accident = 'accident',
+  Other = 'other',
+}
+
 const timedLocationType = {
   timestamp: { type: Date, required: true, default: Date.now() },
   geolocation: { type: pointType },
@@ -37,6 +44,21 @@ const deliveryAddressSchema = new mongoose.Schema({
   location: pointSchema,
 })
 
+const deliveryProblemSchema = new mongoose.Schema({
+  type: { type: String, enum: Object.values(DeliveryProblemType) },
+  message: String,
+  createdByRider: { type: Boolean, default: false },
+  resolved: { type: Boolean, default: false},
+}, { timestamps: true })
+
+export interface DeliveryProblem {
+  type: DeliveryProblemType
+  message: string
+  createdByRider: boolean
+  resolved: boolean
+  createdAt: Date
+  updatedAt: Date
+}
 @Schema({ timestamps: true })
 export class Delivery {
   @Prop({ type: deliveryAddressSchema })
@@ -45,7 +67,7 @@ export class Delivery {
   @Prop({ type: deliveryAddressSchema })
   end: Address
 
-  @Prop({ type: [timedLocationSchema]})
+  @Prop({ type: [timedLocationSchema] })
   route?: TimedLocation[]
   
   @Prop({type: [String]})
@@ -59,14 +81,20 @@ export class Delivery {
   })
   status: DeliveryStatus
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: User.name })
+  @Prop({type: mongoose.Schema.Types.ObjectId, ref: User.name})
   sender: User
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: User.name })
+  @Prop({type: mongoose.Schema.Types.ObjectId, ref: User.name})
   rider?: User
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: User.name })
+  @Prop({type: mongoose.Schema.Types.ObjectId, ref: User.name})
   recipient?: User
+
+  @Prop({type: deliveryProblemSchema, required: false})
+  problem?: DeliveryProblem
+
+  @Prop({type:Boolean, default: false})
+  archived: boolean
 }
 
 export const DeliverySchema = SchemaFactory.createForClass(Delivery)

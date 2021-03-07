@@ -15,8 +15,16 @@ export class AddressService {
     return model.save()
   }
 
+  async findOne(id: string) {
+    return await this.addressModel.findById(id)
+  }
+  
   async findAddressForUser(userId: string): Promise<Address[]> {
     const query: any = { user: new mongoose.Types.ObjectId(userId) }
     return await this.addressModel.find(query).exec()
+  }
+
+  async deleteAddress(id: string) {
+    return await this.addressModel.deleteOne({_id: new mongoose.Types.ObjectId(id)})
   }
 }

@@ -9,12 +9,12 @@ export class UserCreatedEvent {
   kind: string
   time: Date
 
+  @Prop({ type: mongoose.Types.ObjectId, ref: User.name, required: true })
+  user: User
+
   constructor(user: User) {
     this.user = user
   }
-
-  @Prop({ type: mongoose.Types.ObjectId, ref: User.name, required: true })
-  user: User
 }
 
 export const UserCreatedEventSchema = SchemaFactory.createForClass(
