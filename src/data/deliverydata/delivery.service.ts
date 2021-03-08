@@ -20,9 +20,10 @@ export class DeliveryService {
 
   async findPopulatedById(id: string): Promise<Delivery> {
     return await this.model.findById(id)
-    .populate('sender').populate('rider')
-    .populate('recipient')
-    .populate('problem')
+      .populate('sender')
+      .populate('rider')
+      .populate('recipient')
+      .populate('problem')
   }
 
   async findDeliveriesForSender(userId: string): Promise<Delivery[]> {

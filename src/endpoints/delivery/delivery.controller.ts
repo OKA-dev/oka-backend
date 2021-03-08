@@ -4,13 +4,15 @@ import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { ObjectValidationPipe } from 'src/common/pipes/object.validation.pipe';
 import { Roles } from 'src/common/role.decorator';
 import { Role } from 'src/common/role.enum';
-import { DelieryProblemValidator, DeliveryDso, DeliveryDto, DeliveryDtoValidator, DeliveryReasonValidator } from 'src/data/deliverydata/delivery.dto';
+import { DelieryProblemValidator, DeliveryDropOffValidator, DeliveryDso, DeliveryDto, DeliveryDtoValidator, DeliveryReasonValidator } from 'src/data/deliverydata/delivery.dto';
 import { Delivery, DeliveryProblem, DeliveryStatus } from 'src/data/deliverydata/delivery.schema';
 import { DeliveryTransformPipe } from 'src/data/deliverydata/pipes/delivery.transform.pipe';
 import { EventType } from 'src/event/event-type.enum';
 import { DeliveryCancelledEvent, DeliveryConfirmedEvent, DeliveryCreatedEvent, DeliveryDroppedOffEvent, DeliveryPickedUpEvent, DeliveryProblemEvent, DeliveryRiderCancelledEvent } from 'src/event/events/delivery/delivery-events.schema';
-import { DeliveryService } from './delivery.service';
+import { DeliveryService } from '../../data/deliverydata/delivery.service';
 import * as mongoose from 'mongoose'
+import { DeliveryConfirmationService } from 'src/data/deliverydata/delivery.confirmation.service';
+import { DeliveryConfirmation } from 'src/data/deliverydata/delivery.confirmation.schema';
 
 @ApiTags('Delivery')
 @Controller('deliveries')
@@ -18,6 +20,7 @@ export class DeliveryController {
 
   constructor(
     private deliveryService: DeliveryService,
+    private confirmationService: DeliveryConfirmationService,
     private eventEmitter: EventEmitter2) {}
 
   @Post()
@@ -27,6 +30,9 @@ export class DeliveryController {
   async create(@Body(new DeliveryTransformPipe())delivery: DeliveryDso, @Request() req) {
     delivery.sender = {_id: req.user._id}
     let createdDelivery = await this.deliveryService.create(delivery)
+    let confirmation = new DeliveryConfirmation(createdDelivery, this.generateConfirmationCode())
+    await this.confirmationService.save(confirmation)
+
     this.eventEmitter.emit(EventType.DeliveryCreated, new DeliveryCreatedEvent(createdDelivery))
     return createdDelivery
   }
@@ -49,7 +55,6 @@ export class DeliveryController {
 
   @Patch(':id/cancel')
   @Roles(Role.User)
-  @UsePipes()
   async cancelDelivery(
     @Body(new ObjectValidationPipe(DeliveryReasonValidator)) body,
     @Param() params, 
@@ -141,14 +146,24 @@ export class DeliveryController {
 
   @Patch(':id/rider/dropoff')
   @Roles(Role.Rider)
-  async dropOffDelivery(@Param() params, @Request() req) {
+  async dropOffDelivery(
+    @Body(new ObjectValidationPipe(DeliveryDropOffValidator)) body,
+    @Param() params, 
+    @Request() req
+    ) {
     const id = params.id
+    const withConfirmationCode = true
     let delivery = await this.deliveryService.findPopulatedById(id)
     if (delivery.status != DeliveryStatus.EnRoute) {
       throw new BadRequestException()
     }
     if (delivery.rider._id != req.user._id) {
       throw new ForbiddenException()
+    }
+    const confirmation = await this.confirmationService.findByDeliveryId(delivery._id)
+    if (body.code != confirmation.code) {
+      // TODO: maximum 5 tries on a delivery
+      throw new BadRequestException()
     }
     delivery = await this.deliveryService.setStatus(id, DeliveryStatus.Delivered)
     this.eventEmitter.emit(EventType.DeliveryDroppedOff, new DeliveryDroppedOffEvent(delivery))
@@ -199,6 +214,12 @@ export class DeliveryController {
     delivery = await this.deliveryService.setProblem(id, body)
     this.eventEmitter.emit(EventType.DeliveryRiderProblem, new DeliveryProblemEvent(delivery, body.message))
     return delivery
+  }
+
+  private generateConfirmationCode(): string {
+    const min = 10000
+    const max = 99999
+    return Math.floor(Math.random() * (max - min) + min).toString()
   }
 
 }

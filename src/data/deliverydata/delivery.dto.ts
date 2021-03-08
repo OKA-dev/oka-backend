@@ -43,3 +43,7 @@ export const DeliveryReasonValidator = Joi.object({
 export const DelieryProblemValidator = Joi.object({
   message: Joi.string().required()
 })
+
+export const DeliveryDropOffValidator = Joi.object({
+  code: Joi.string().required(),
+})

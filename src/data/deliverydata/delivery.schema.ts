@@ -61,6 +61,8 @@ export interface DeliveryProblem {
 }
 @Schema({ timestamps: true })
 export class Delivery {
+  _id: string
+
   @Prop({ type: deliveryAddressSchema })
   start: Address
 
