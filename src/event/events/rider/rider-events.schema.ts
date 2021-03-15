@@ -9,7 +9,7 @@ export class RiderCreatedEvent {
   kind: string
   time: Date
 
-  @Prop({ type: mongoose.Types.ObjectId, ref: User.name, required: true })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: User.name, required: true })
   rider: User
 
   constructor(rider: User) {

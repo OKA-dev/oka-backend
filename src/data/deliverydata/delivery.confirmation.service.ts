@@ -3,7 +3,6 @@ import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import * as mongoose from 'mongoose'
 import { DeliveryConfirmation, DeliveryConfirmationDocument } from './delivery.confirmation.schema'
-import { Delivery } from './delivery.schema'
 
 @Injectable()
 export class DeliveryConfirmationService {

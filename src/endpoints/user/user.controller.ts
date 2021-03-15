@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -9,10 +10,11 @@ import {
   Query,
   Request,
   UnauthorizedException,
+  UploadedFiles,
+  UseInterceptors,
   UsePipes,
 } from '@nestjs/common'
 import { EventEmitter2 } from '@nestjs/event-emitter'
-import { RolesGuard } from 'src/auth/guards/roles.guard'
 import { Public } from 'src/auth/public'
 import { EventType } from 'src/event/event-type.enum'
 import { UserCreatedEvent } from 'src/event/events/user/user-events.schema'
@@ -27,6 +29,10 @@ import { AddressTransformPipe } from 'src/data/addressdata/pipes/address.transfo
 import { UserDtoValidator, UserDto } from 'src/data/userdata/user.dto'
 import { UserService } from '../../data/userdata/user.service'
 import { ApiBody, ApiTags } from '@nestjs/swagger'
+import { FilesInterceptor } from '@nestjs/platform-express'
+import { CloudStorageService } from 'src/common/services/cloud-storage.service'
+import { PhotoService } from 'src/data/photo/photo.service'
+import { Photo } from 'src/data/photo/photo.schema'
 
 @ApiTags('Users')
 @Controller('users')
@@ -34,6 +40,8 @@ export class UserController {
   constructor(
     private userService: UserService,
     private addressService: AddressService,
+    private cloudService: CloudStorageService,
+    private photoService: PhotoService,
     private eventEmitter: EventEmitter2,
   ) {}
 
@@ -54,7 +62,8 @@ export class UserController {
   async getUser(@Request() req) {
     const user = req.user
     if (user && user._id) {
-      return await this.userService.findById(user._id)
+      let fullUser = await this.userService.findById(user._id)
+      return await this.userService.withPhotoUrls(fullUser)
     } else {
       throw new UnauthorizedException()
     }
@@ -83,6 +92,37 @@ export class UserController {
       throw new ForbiddenException()
     }
     return await this.addressService.deleteAddress(params.id)
+  }
+
+  @Roles(Role.User)
+  @Post('/photo')
+  @UseInterceptors(FilesInterceptor('file'))
+  async uploadFile(@UploadedFiles() files: Express.Multer.File, @Request() req) {
+    const file = files[0]
+    if (!file) {
+      throw new BadRequestException('invalid file')
+    }
+    console.log('file = ', file)
+    const storageKey = await this.cloudService.uploadPublicFile(file.buffer, file.filename)
+    let photo = new Photo(req.user._id, storageKey)
+    // todo: save to user
+    photo = await this.photoService.save(photo)
+    return await this.userService.setPhoto(req.user._id, photo._id)
+  }
+
+  @Roles(Role.User)
+  @Delete('/photo/:id')
+  async deletePhoto(@Param() params, @Request() req) {
+    const id = params.id
+    let photo = await this.photoService.findOne(id)
+    if (photo.user != req.user._id) {
+      throw new ForbiddenException('You are not allowed to delete this photo')
+    }
+    await this.photoService.findOneAndDelete(id)
+    const result = await this.cloudService.deletePublicFile(photo.key)
+    console.log('delete file result = ', result)
+    // todo delete from user
+    return result
   }
 
   @Get('/random')

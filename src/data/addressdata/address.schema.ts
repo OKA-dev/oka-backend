@@ -17,8 +17,6 @@ export const pointSchema = new mongoose.Schema({
   },
 }, { _id: false })
 
-export type AddressDocument = Address & Document
-
 @Schema({ timestamps: true })
 export class Address {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: User.name })
@@ -52,4 +50,5 @@ export class Address {
   location: Point
 }
 
+export type AddressDocument = Address & Document
 export const AddressSchema = SchemaFactory.createForClass(Address)

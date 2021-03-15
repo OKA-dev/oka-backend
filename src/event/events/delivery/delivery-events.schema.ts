@@ -8,7 +8,7 @@ export class DeliveryCreatedEvent {
   kind: string
   time: Date
 
-  @Prop({type: mongoose.Types.ObjectId, ref: Delivery.name})
+  @Prop({type: mongoose.Schema.Types.ObjectId, ref: Delivery.name})
   delivery: Delivery
 
   constructor(delivery: Delivery) {
@@ -26,13 +26,13 @@ export class DeliveryCancelledEvent {
   kind: string
   time: Date
 
-  @Prop({type: mongoose.Types.ObjectId, ref: Delivery.name})
+  @Prop({type: mongoose.Schema.Types.ObjectId, ref: Delivery.name})
   delivery: Delivery
 
   @Prop({ type: String, required: true})
   reason?: string
 
-  @Prop({ type: mongoose.Types.ObjectId, ref: User.name })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: User.name })
   cancelledBy?: UserRef
 
   constructor(delivery: Delivery, reason?: string, cancelledBy?: UserRef) {
@@ -51,13 +51,13 @@ export class DeliveryRiderCancelledEvent {
   kind: string
   time: Date
 
-  @Prop({type: mongoose.Types.ObjectId, ref: Delivery.name})
+  @Prop({type: mongoose.Schema.Types.ObjectId, ref: Delivery.name})
   delivery: Delivery
 
   @Prop({ type: String, required: true})
   reason?: string
 
-  @Prop({ type: mongoose.Types.ObjectId, ref: User.name })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: User.name })
   cancelledBy?: UserRef
 
   constructor(delivery: Delivery, reason?: string, cancelledBy?: UserRef) {
@@ -76,7 +76,7 @@ export class DeliveryConfirmedEvent {
   kind: string
   time: Date
 
-  @Prop({type: mongoose.Types.ObjectId, ref: Delivery.name})
+  @Prop({type: mongoose.Schema.Types.ObjectId, ref: Delivery.name})
   delivery: Delivery
 
   constructor(delivery: Delivery) {
@@ -93,7 +93,7 @@ export class DeliveryPickedUpEvent {
   kind: string
   time: Date
 
-  @Prop({type: mongoose.Types.ObjectId, ref: Delivery.name})
+  @Prop({type: mongoose.Schema.Types.ObjectId, ref: Delivery.name})
   delivery: Delivery
 
   constructor(delivery: Delivery) {
@@ -110,7 +110,7 @@ export class DeliveryDroppedOffEvent {
   kind: string
   time: Date
 
-  @Prop({type: mongoose.Types.ObjectId, ref: Delivery.name})
+  @Prop({type: mongoose.Schema.Types.ObjectId, ref: Delivery.name})
   delivery: Delivery
 
   constructor(delivery: Delivery) {
@@ -128,7 +128,7 @@ export class DeliveryProblemEvent {
   time: Date
   message: string
 
-  @Prop({type: mongoose.Types.ObjectId, ref: Delivery.name})
+  @Prop({type: mongoose.Schema.Types.ObjectId, ref: Delivery.name})
   delivery: Delivery
 
   constructor(delivery: Delivery, message: string) {
@@ -147,7 +147,7 @@ export class DeliveryRiderProblemEvent {
   time: Date
   message: string
 
-  @Prop({type: mongoose.Types.ObjectId, ref: Delivery.name})
+  @Prop({type: mongoose.Schema.Types.ObjectId, ref: Delivery.name})
   delivery: Delivery
 
   constructor(delivery: Delivery, message: string) {

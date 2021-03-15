@@ -8,6 +8,7 @@ import * as csurf from 'csurf'
 import * as rateLimit from 'express-rate-limit'
 import { NestExpressApplication } from '@nestjs/platform-express'
 import { AllExceptionFilter } from './common/filters/all.exception.filter'
+import { config } from 'aws-sdk'
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule)
@@ -24,6 +25,13 @@ async function bootstrap() {
   app.enableCors()
   app.useGlobalFilters(new AllExceptionFilter())
 
+  // TODO: acessKeyId and secreateAccessKey are deprecated.
+  // replace configuration
+  config.update({
+    accessKeyId: configService.get('AWS_ACCESS_KEY'),
+    secretAccessKey: configService.get('AWS_SECRET_KEY'),
+    region: configService.get('AWS_REGION'),
+  })
   configureSwagger(app)
   await app.listen(configService.get('PORT'))
   app.use(csurf())

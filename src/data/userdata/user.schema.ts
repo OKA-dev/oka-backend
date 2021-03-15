@@ -3,6 +3,7 @@ import * as mongoose from 'mongoose'
 import { Role } from 'src/common/role.enum'
 import { phoneType, timedLocationType, TimedLocation } from '../addressdata/location.types'
 import { PhoneNumber } from '../addressdata/phonenumber'
+import { Photo } from '../photo/photo.schema'
 
 export enum UserAccountType {
   Email = 'email',
@@ -52,6 +53,12 @@ export class User {
     default: UserAccountType.Email
   })
   accountType: string
+
+  @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'Photo'})
+  photo: Photo
+
+  @Prop({type: String, select: false})
+  hashedRefreshToken: string
 }
 
 export const UserSchema = SchemaFactory.createForClass(User)
