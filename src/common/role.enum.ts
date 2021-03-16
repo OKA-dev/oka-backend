@@ -3,4 +3,5 @@ export enum Role {
   Rider = 'rider',
   Admin = 'admin',
   SuperUser = 'superuser',
+  Refresh = 'refresh',
 }

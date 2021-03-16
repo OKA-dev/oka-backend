@@ -37,6 +37,24 @@ export class UserService {
       )
   }
 
+  async setRefreshToken(userId: string, refreshToken: string) {
+    return await this.model.findOneAndUpdate(
+      {_id: userId},
+      { $set: {hashedRefreshToken: refreshToken }}
+    )
+  }
+
+  async removeRefreshToken(userId: string) {
+    return await this.model.findOneAndUpdate(
+      {_id: userId},
+      { $set: {hashedRefreshToken: null }}
+    ) 
+  }
+
+  async findRefreshToken(userId: string) {
+    return await this.model.findById(userId).select('+hashedRefreshToken')
+  }
+
   async findAll(): Promise<User[]> {
     return this.model.find().exec()
   }

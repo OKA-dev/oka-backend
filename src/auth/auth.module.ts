@@ -11,6 +11,7 @@ import { JwtAuthGuard } from './guards/jwt.auth.guard'
 import { RolesGuard } from './guards/roles.guard'
 import { UserEndpointModule } from 'src/endpoints/user/user.endpoint.module'
 import { UserDataModule } from 'src/data/userdata/user.data.module'
+import { JwtRefreshStrategy } from './strategies/jwt-refresh-strategy'
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { UserDataModule } from 'src/data/userdata/user.data.module'
     AuthService,
     LocalStrategy,
     JwtStrategy,
+    JwtRefreshStrategy,
     { provide: 'APP_GUARD', useClass: JwtAuthGuard },
     { provide: 'APP_GUARD', useClass: RolesGuard },
   ],
