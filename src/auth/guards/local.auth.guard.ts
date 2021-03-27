@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common'
+import { BadRequestException, CanActivate, ExecutionContext, Injectable } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
 import { Request } from 'express'
 import { LocalStrategy } from '../strategies/local.strategy'
@@ -16,6 +16,9 @@ export class LocalAuthGuard extends AuthGuard('local') implements CanActivate {
 
   private async validateRequest(request: Request): Promise<boolean> {
     const credentials = request.body
+    if (!credentials.email || !credentials.password) {
+      throw new BadRequestException('Invalid email or password')
+    }
     const user = await this.strategy.validate(
       credentials.email,
       credentials.password,

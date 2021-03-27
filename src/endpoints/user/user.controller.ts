@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Body,
+  ConflictException,
   Controller,
   Delete,
   ForbiddenException,
@@ -33,12 +34,16 @@ import { FilesInterceptor } from '@nestjs/platform-express'
 import { CloudStorageService } from 'src/common/services/cloud-storage.service'
 import { PhotoService } from 'src/data/photo/photo.service'
 import { Photo } from 'src/data/photo/photo.schema'
+import { FederatedSignupDtoValidator, FederatedDto } from 'src/auth/federated.dto'
+import { UserAccountType } from 'src/data/userdata/user.schema'
+import { AuthService } from 'src/auth/auth.service'
 
 @ApiTags('Users')
 @Controller('users')
 export class UserController {
   constructor(
     private userService: UserService,
+    private authService: AuthService,
     private addressService: AddressService,
     private cloudService: CloudStorageService,
     private photoService: PhotoService,
@@ -57,6 +62,39 @@ export class UserController {
     return createdUser
   }
 
+
+  @Public()
+  @Post('/federated')
+  async federatedStartSignup(
+    @Body(new ObjectValidationPipe(FederatedSignupDtoValidator), PhoneNumberTransformPipe)body: FederatedDto, 
+    @Request() req
+    ) {
+    let userObject
+    if (body.type == UserAccountType.Google) {
+      userObject = await this.authService.validateGoogleToken(body.token)
+    } else if (body.type == UserAccountType.Facebook) {
+      userObject = await this.authService.validateFacebookToken(body.token)
+    } else {
+      throw new BadRequestException(`Unsupported federated login: ${body.type}`)
+    }
+
+    userObject = {
+      ...userObject,
+      phone: body.phone
+    }
+
+    if (!userObject || !userObject.name || !userObject.email) {
+      throw new BadRequestException()
+    }
+
+    const existingUser = await this.userService.findByEmail(userObject.email)
+    if (existingUser) {
+      throw new ConflictException('User with email already exists')
+    }
+    const user = await this.userService.create(userObject)
+    return user
+  }
+  
   @Roles(Role.User)
   @Get()
   async getUser(@Request() req) {

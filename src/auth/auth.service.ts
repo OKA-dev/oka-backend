@@ -5,6 +5,8 @@ import { Role } from 'src/common/role.enum'
 import { Hasher } from 'src/common/util/hasher'
 import { User } from 'src/data/userdata/user.schema'
 import { UserService } from 'src/data/userdata/user.service'
+import { FacebookAuthStrategy } from './strategies/facebook-auth.strategy'
+import { GoogelAuthStrategy } from './strategies/google-auth.strategy'
 
 @Injectable()
 export class AuthService {
@@ -12,6 +14,8 @@ export class AuthService {
     private userService: UserService,
     private jwtService: JwtService,
     private appConfig: AppConfigService,
+    private googelAuth: GoogelAuthStrategy,
+    private facebookAuth: FacebookAuthStrategy,
   ) {}
 
   async validateUser(email: string, password: string): Promise<User | null> {
@@ -47,5 +51,15 @@ export class AuthService {
     return {
       sessionToken: sessionToken
     }
+  }
+
+  async validateGoogleToken(token: string): Promise<any>{
+    const payload = await this.googelAuth.validate(token)
+    const userObject = await this.googelAuth.processPayloadForSignup(payload)  
+    return userObject
+  }
+
+  async validateFacebookToken(token: string): Promise<any> {
+    return await this.facebookAuth.process(token)
   }
 }

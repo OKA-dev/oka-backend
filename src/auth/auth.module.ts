@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common'
+import { HttpModule, Module } from '@nestjs/common'
 import { PassportModule } from '@nestjs/passport'
 import { AuthService } from './auth.service'
 import { LocalStrategy } from './strategies/local.strategy'
@@ -9,15 +9,17 @@ import { AppconfigModule } from 'src/appconfig/appconfig.module'
 import { JwtStrategy } from './strategies/jwt.strategy'
 import { JwtAuthGuard } from './guards/jwt.auth.guard'
 import { RolesGuard } from './guards/roles.guard'
-import { UserEndpointModule } from 'src/endpoints/user/user.endpoint.module'
 import { UserDataModule } from 'src/data/userdata/user.data.module'
 import { JwtRefreshStrategy } from './strategies/jwt-refresh-strategy'
+import { GoogelAuthStrategy } from './strategies/google-auth.strategy'
+import { FacebookAuthStrategy } from './strategies/facebook-auth.strategy'
+import JwtFederatedStrategy from './strategies/jwt-federated.strategy'
 
 @Module({
   imports: [
-    UserEndpointModule,
     UserDataModule,
     AppconfigModule,
+    HttpModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
       imports: [AppconfigModule],
@@ -34,6 +36,9 @@ import { JwtRefreshStrategy } from './strategies/jwt-refresh-strategy'
     LocalStrategy,
     JwtStrategy,
     JwtRefreshStrategy,
+    GoogelAuthStrategy,
+    FacebookAuthStrategy,
+    JwtFederatedStrategy,
     { provide: 'APP_GUARD', useClass: JwtAuthGuard },
     { provide: 'APP_GUARD', useClass: RolesGuard },
   ],

@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
 import { JwtRefreshStrategy } from '../strategies/jwt-refresh-strategy';
@@ -22,6 +22,8 @@ implements CanActivate {
     if (jwtToken) {
       request.user = await this.strategy.validate(jwtToken)
       return request.user != null 
+    } else {
+      throw new UnauthorizedException()
     }
     return true
   }
