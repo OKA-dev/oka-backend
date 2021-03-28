@@ -28,4 +28,16 @@ export class AppConfigService {
   get publicS3Bucket(): string {
     return this.configService.get('AWS_PUBLIC_BUCKET')
   }
+  
+  get googleAuthClientId(): string {
+    return this.configService.get('GOOGLE_AUTH_CLIENT_ID')
+  }
+
+  get facebookAppId(): string {
+    return this.configService.get('FACEBOOK_APP_ID')
+  }
+
+  get facebookAppSecret(): string {
+     return this.configService.get('FACEBOOK_APP_SECRET')
+  }
 }

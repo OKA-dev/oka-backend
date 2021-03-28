@@ -34,7 +34,6 @@ export class CloudStorageService {
       Key: obj.key
     })
     obj.url = url
-    console.log(' returning ', obj)
     return obj
   }
 
