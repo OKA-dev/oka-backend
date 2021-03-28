@@ -1,10 +1,8 @@
-import { BadRequestException, Injectable, UnauthorizedException } from "@nestjs/common";
-import { AppConfigService } from "src/appconfig/app.config.service";
-import { UserService } from "src/data/userdata/user.service";
+import { Injectable, UnauthorizedException } from "@nestjs/common"
+import { AppConfigService } from "src/appconfig/app.config.service"
 import { OAuth2Client } from 'google-auth-library'
 import * as moment from 'moment'
-import { UserAccountType } from "src/data/userdata/user.schema";
-import { Role } from "src/common/role.enum";
+import { UserAccountType } from "src/data/userdata/user.schema"
 
 @Injectable()
 export class GoogelAuthStrategy {
@@ -13,10 +11,9 @@ export class GoogelAuthStrategy {
 
   constructor(
     appConfig: AppConfigService,
-    private userService: UserService,
   ) {
     this.clientId = appConfig.googleAuthClientId
-    this.oauthClient = new OAuth2Client({ clientId: this.clientId });
+    this.oauthClient = new OAuth2Client({ clientId: this.clientId })
   }
 
   async validate(token: string): Promise<any> {
@@ -25,8 +22,8 @@ export class GoogelAuthStrategy {
       audience: this.clientId,  // Specify the CLIENT_ID of the app that accesses the backend
       // Or, if multiple clients access the backend:
       //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
-    });
-    const payload = ticket.getPayload();
+    })
+    const payload = ticket.getPayload()
     console.log(`got payload: ${JSON.stringify(payload)}`)
 
     // aud is client id
@@ -46,8 +43,8 @@ export class GoogelAuthStrategy {
       throw new UnauthorizedException('Invalid google authentication. Source invalid')
     }
 
-    var expiry = moment.unix(exp);
-    var now = moment();
+    var expiry = moment.unix(exp)
+    var now = moment()
     if (expiry.isBefore(now)) {
       throw new UnauthorizedException('Invalid google authentication. Auth expired')
     }
@@ -61,10 +58,6 @@ export class GoogelAuthStrategy {
 
   async processPayloadForSignup(payload: any): Promise<any> {
     const email = payload.email
-    const existingUser = await this.userService.findByEmail(email)
-    if (existingUser) {
-      throw new BadRequestException('User with email already exists')
-    }
     const userObject = {
       sub: payload.id,
       email, 
@@ -73,7 +66,6 @@ export class GoogelAuthStrategy {
       name: payload.name,
       signupType: UserAccountType.Google,
       emailVerified: payload.email_verified,
-      roles: [Role.Signup]
     }
 
     return userObject

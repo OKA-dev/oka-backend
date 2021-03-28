@@ -1,23 +1,21 @@
-import { BadRequestException, HttpService, Injectable } from "@nestjs/common";
-import { PassportStrategy } from "@nestjs/passport";
-import { Request } from "express";
-import { Profile, Strategy } from "passport-facebook";
-import { AppConfigService } from "src/appconfig/app.config.service";
-import { Role } from "src/common/role.enum";
-import { UserAccountType } from "src/data/userdata/user.schema";
-import { UserService } from "src/data/userdata/user.service";
+import { BadRequestException, HttpService, Injectable } from '@nestjs/common'
+import { PassportStrategy } from '@nestjs/passport'
+import { Request } from 'express'
+import { Profile, Strategy } from 'passport-facebook'
+import { AppConfigService } from 'src/appconfig/app.config.service'
+import { Role } from 'src/common/role.enum'
+import { UserAccountType } from 'src/data/userdata/user.schema'
 
 @Injectable()
 export class FacebookAuthStrategy extends PassportStrategy(Strategy, 'facebook') {
   constructor(
     appConfig: AppConfigService,
     private http: HttpService,
-    private userService: UserService,
   ) {
     super({
       clientID: appConfig.facebookAppId,
       clientSecret: appConfig.facebookAppSecret,
-      callbackURL: "http://localhost:4200/facebook/redirect",
+      callbackURL: 'http://localhost:4200/facebook/redirect',
       scope: 'email',
       profileFields: ['emails', 'name']
     })
@@ -31,10 +29,8 @@ export class FacebookAuthStrategy extends PassportStrategy(Strategy, 'facebook')
   }
 
   async process(accessToken: string): Promise<any>{
-    const graphBase = `https://graph.facebook.com/me?fields=email,id,name&access_token=${accessToken}`
-    console.log(`getting: ${graphBase}`)
-    const payload = await this.http.get(graphBase).toPromise().then( r => r.data).catch(err => {throw err})
-    console.log('payload = ', payload)
+    const graphUrl = `https://graph.facebook.com/me?fields=email,id,name&access_token=${accessToken}`
+    const payload = await this.http.get(graphUrl).toPromise().then( r => r.data).catch(err => {throw err})
     if (!payload || !payload.email || ! payload.id || !payload.name) {
       console.error('missing field')
       throw new BadRequestException('Invalid token')
@@ -51,7 +47,6 @@ export class FacebookAuthStrategy extends PassportStrategy(Strategy, 'facebook')
       roles: [Role.User],
       accountType: UserAccountType.Facebook,
     }
-    console.log(`returning userObject: ${userObject}`)
     return userObject
   }
 
@@ -64,18 +59,17 @@ export class FacebookAuthStrategy extends PassportStrategy(Strategy, 'facebook')
     console.log('accessToken = ', accessToken)
     console.log('refreshToken = ', refreshToken)
     console.log('profile = ', profile)
-    const { name, emails } = profile;
+    const { name, emails } = profile
     const user = {
       email: emails[0].value,
       firstName: name.givenName,
       lastName: name.familyName,
-    };
+    }
     const payload = {
       user,
       accessToken,
-    };
+    }
 
-    done(null, payload);
+    done(null, payload)
   }
-
 }

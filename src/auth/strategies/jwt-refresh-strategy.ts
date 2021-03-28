@@ -3,7 +3,6 @@ import { PassportStrategy } from "@nestjs/passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
 import { AppConfigService } from "src/appconfig/app.config.service";
 import { UserService } from "src/data/userdata/user.service";
-import { AuthService } from "../auth.service";
 import { JwtService } from '@nestjs/jwt'
 import { Hasher } from "src/common/util/hasher";
 

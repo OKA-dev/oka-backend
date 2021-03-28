@@ -1,18 +1,13 @@
-import { BadRequestException, Body, ConflictException, Controller, NotFoundException, Post, Request, UnauthorizedException, UseGuards } from '@nestjs/common'
-import { JwtService } from '@nestjs/jwt'
+import { Body, Controller, NotFoundException, Post, Request, UnauthorizedException, UseGuards } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { ObjectValidationPipe } from 'src/common/pipes/object.validation.pipe'
-import { PhoneNumberTransformPipe } from 'src/common/pipes/phone.transform.pipe'
 import { UserAccountType } from 'src/data/userdata/user.schema'
 import { UserService } from 'src/data/userdata/user.service'
 import { AuthService } from './auth.service'
-import { FederatedDto, FederatedLoginDtoValidator, FederatedSignupDtoValidator } from './federated.dto'
-import JwtFederatedGuard from './guards/jwt-federated.guard'
+import { FederatedDto, FederatedLoginDtoValidator } from './federated.dto'
 import JwtRefreshGuard from './guards/jwt-refresh.guard'
 import { LocalAuthGuard } from './guards/local.auth.guard'
 import { Public } from './public'
-import { FacebookAuthStrategy } from './strategies/facebook-auth.strategy'
-import { GoogelAuthStrategy } from './strategies/google-auth.strategy'
 
 
 @ApiTags('Auth')
@@ -20,10 +15,7 @@ import { GoogelAuthStrategy } from './strategies/google-auth.strategy'
 export class AuthController {
   constructor(
     private authService: AuthService,
-    private googelAuth: GoogelAuthStrategy,
-    private jwtService: JwtService,
-    private userService: UserService,
-    private facebookAuth: FacebookAuthStrategy) {}
+    private userService: UserService,) {}
 
   @Public()
   @UseGuards(LocalAuthGuard)
@@ -47,7 +39,10 @@ export class AuthController {
     let userObject
     switch (body.type) {
       case UserAccountType.Facebook:
-        userObject = await this.facebookAuth.process(body.token)
+        userObject = await this.authService.validateFacebookToken(body.token)
+        break
+      case UserAccountType.Google:
+        userObject = await this.authService.validateGoogleToken(body.token)
     }
 
     if (!userObject || !userObject.email) {
@@ -59,11 +54,5 @@ export class AuthController {
     }
 
     return await this.authService.login(user)
-  }
-
-  @Post('/federated/user')
-  @UseGuards(JwtFederatedGuard)
-  async federatedSignup(@Body() body) {
-      const payload = this.jwtService.verify(body.token)
   }
 }

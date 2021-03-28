@@ -13,7 +13,6 @@ import { UserDataModule } from 'src/data/userdata/user.data.module'
 import { JwtRefreshStrategy } from './strategies/jwt-refresh-strategy'
 import { GoogelAuthStrategy } from './strategies/google-auth.strategy'
 import { FacebookAuthStrategy } from './strategies/facebook-auth.strategy'
-import JwtFederatedStrategy from './strategies/jwt-federated.strategy'
 
 @Module({
   imports: [
@@ -38,7 +37,6 @@ import JwtFederatedStrategy from './strategies/jwt-federated.strategy'
     JwtRefreshStrategy,
     GoogelAuthStrategy,
     FacebookAuthStrategy,
-    JwtFederatedStrategy,
     { provide: 'APP_GUARD', useClass: JwtAuthGuard },
     { provide: 'APP_GUARD', useClass: RolesGuard },
   ],
