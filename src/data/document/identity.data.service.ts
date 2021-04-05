@@ -5,7 +5,7 @@ import * as mongoose from 'mongoose'
 import { Identity, IdentityDocument } from './identity.schema';
 
 @Injectable()
-export class IdentityService {
+export class IdentityDataService {
   constructor(@InjectModel(Identity.name) private documentModel: Model<IdentityDocument>) {}
 
   async save(doc: Identity): Promise<Identity> {

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common'
 import { MongooseModule } from '@nestjs/mongoose'
-import { DeliveryService } from 'src/data/deliverydata/delivery.service'
+import { DeliveryDataService } from 'src/data/deliverydata/delivery.data.service'
 import { DeliveryConfirmation, DeliveryConfirmationSchema } from './delivery.confirmation.schema'
 import { DeliveryConfirmationService } from './delivery.confirmation.service'
 import { Delivery, DeliverySchema } from './delivery.schema'
@@ -12,7 +12,7 @@ import { Delivery, DeliverySchema } from './delivery.schema'
       {name: DeliveryConfirmation.name, schema: DeliveryConfirmationSchema},
     ])
   ],
-  providers: [DeliveryService, DeliveryConfirmationService],
-  exports: [DeliveryService, DeliveryConfirmationService],
+  providers: [DeliveryDataService, DeliveryConfirmationService],
+  exports: [DeliveryDataService, DeliveryConfirmationService],
 })
 export class DeliverydataModule {}

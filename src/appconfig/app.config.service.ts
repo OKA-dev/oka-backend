@@ -40,4 +40,28 @@ export class AppConfigService {
   get facebookAppSecret(): string {
      return this.configService.get('FACEBOOK_APP_SECRET')
   }
+
+  get oneSignalAppId(): string {
+    return this.configService.get('ONESIGNAL_APP_ID')
+  }
+  
+  get twilioAccountSID(): string {
+    return this.configService.get('TWILIO_ACCOUNT_SID')
+  }
+
+  get twilioVerifySID(): string {
+    return this.configService.get('TWILIO_VERIFY_SID')
+  }
+
+  get twilioAccountAuthToken(): string {
+    return this.configService.get('TWILIO_AUTH_TOKEN')
+  }
+
+  get twilioPhoneNumber(): string {
+    return this.configService.get('TWILIO_PHONE_NUMBER')
+  }
+
+  get verificationService(): string {
+    return this.configService.get('VERIFICATION_SERVICE')
+  }
 }

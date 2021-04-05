@@ -12,6 +12,7 @@ import {
 } from './events/user/user-events.schema'
 import { EventService } from './event.service';
 import { UserDataModule } from 'src/data/userdata/user.data.module'
+import { CommonModule } from 'src/common/common.module'
 import { 
   DeliveryCancelledEvent, 
   DeliveryCancelledEventSchema, 
@@ -34,6 +35,7 @@ import {
 @Module({
   imports: [
     UserDataModule,
+    CommonModule,
     MongooseModule.forFeature([
       {
         name: Event.name,

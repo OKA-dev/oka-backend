@@ -17,6 +17,7 @@ import { AddressDataModule } from './data/addressdata/address.data.module';
 import { DeliverydataModule } from './data/deliverydata/deliverydata.module';
 import { DeliveryModule } from './endpoints/delivery/delivery.module';
 import { RiderEndpointModule } from './endpoints/rider/rider.endpoint.module';
+import { VerificationDataModule } from './data/verifications/verification.data.module'
 
 let envFilePath = '.env'
 const ENV = process.env.NODE_ENV
@@ -51,6 +52,7 @@ if (ENV == 'development') {
     AppconfigModule,
     EventModule,
     UserDataModule,
+    VerificationDataModule,
     AddressDataModule,
     DeliverydataModule,
     DeliveryModule,

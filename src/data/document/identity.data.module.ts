@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common'
 import { MongooseModule } from '@nestjs/mongoose';
 import { Identity, IdentitySchema } from './identity.schema';
-import { IdentityService } from './identity.service';
+import { IdentityDataService } from './identity.data.service';
 
 @Module({
   imports: [
@@ -9,7 +9,7 @@ import { IdentityService } from './identity.service';
       { name: Identity.name, schema: IdentitySchema }
     ])
   ],
-  providers: [IdentityService],
-  exports: [IdentityService],
+  providers: [IdentityDataService],
+  exports: [IdentityDataService],
 })
 export class IdentityDataModule {}

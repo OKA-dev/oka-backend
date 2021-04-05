@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common'
 import { MongooseModule } from '@nestjs/mongoose'
 import { Photo, PhotoSchema } from './photo.schema'
-import { PhotoService } from './photo.service'
+import { PhotoDataService } from './photo.data.service'
 
 @Module({
   imports: [
@@ -9,7 +9,7 @@ import { PhotoService } from './photo.service'
       {name: Photo.name, schema: PhotoSchema}
     ])
   ],
-  providers: [PhotoService],
-  exports: [PhotoService],
+  providers: [PhotoDataService],
+  exports: [PhotoDataService],
 })
 export class PhotoDataModule {}

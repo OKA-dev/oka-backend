@@ -4,22 +4,20 @@ import {
   Injectable,
   PipeTransform,
 } from '@nestjs/common'
-import { UserDto } from 'src/data/userdata/user.dto'
+import { PhoneNumberWrapper, UserDto } from 'src/data/userdata/user.dto'
+import { PhoneUtil } from '../util/phone.util'
 
 @Injectable()
 export class PhoneNumberTransformPipe implements PipeTransform {
-  transform(value: UserDto, metadata: ArgumentMetadata): UserDto {
+  transform(value: PhoneNumberWrapper, metadata: ArgumentMetadata): PhoneNumberWrapper {
     const phone = value.phone
     if (!phone.countryCode || !phone.number) {
       throw new BadRequestException(
         'Invalid phone number:' + phone.countryCode + ' ' + phone.number,
       )
     }
-    let phoneNumber = phone.number
-    if (phoneNumber.startsWith('0')) {
-      phoneNumber = phoneNumber.substring(1)
-    }
-    phone.e164 = `+${phone.countryCode}${phoneNumber}`
+    const phoneUtil = new PhoneUtil()
+    phone.e164 = phoneUtil.e164Number(phone.countryCode, phone.number)
     return value
   }
 }

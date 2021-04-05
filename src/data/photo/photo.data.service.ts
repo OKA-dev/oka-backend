@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 import { Photo, PhotoDocument } from './photo.schema';
 
 @Injectable()
-export class PhotoService {
+export class PhotoDataService {
   constructor(@InjectModel(Photo.name) private documentModel: Model<PhotoDocument>) {}
 
   async save(photo: Photo): Promise<Photo> {

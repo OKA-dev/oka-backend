@@ -92,6 +92,12 @@ export class Delivery {
   @Prop({type: mongoose.Schema.Types.ObjectId, ref: User.name})
   recipient?: User
 
+  @Prop({type: mongoose.Schema.Types.Date})
+  pickupTime?: Date
+
+  @Prop({type: mongoose.Schema.Types.Date})
+  dropoffTime?: Date
+
   @Prop({type: deliveryProblemSchema, required: false})
   problem?: DeliveryProblem
 

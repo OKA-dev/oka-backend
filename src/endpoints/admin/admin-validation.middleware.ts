@@ -2,11 +2,11 @@ import { ForbiddenException, Injectable, NestMiddleware } from '@nestjs/common'
 import { NextFunction, Request, Response } from 'express'
 import { Role } from 'src/common/role.enum'
 import { User } from 'src/data/userdata/user.schema'
-import { UserService } from 'src/data/userdata/user.service'
+import { UserDataService } from 'src/data/userdata/user.data.service'
 
 @Injectable()
 export class AdminValidationMiddleware implements NestMiddleware {
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserDataService) {}
 
   async use(req: Request, res: Response, next: NextFunction) {
     const requestUser: any = req.user
