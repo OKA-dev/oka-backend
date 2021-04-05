@@ -6,7 +6,7 @@ import { DeliveryDso } from "src/data/deliverydata/delivery.dto";
 import { Delivery, DeliveryDocument, DeliveryProblem, DeliveryStatus } from "src/data/deliverydata/delivery.schema";
 
 @Injectable()
-export class DeliveryService {
+export class DeliveryDataService {
   constructor(@InjectModel(Delivery.name) private model: Model<DeliveryDocument>) {}
 
   async create(deliveryToCreate: DeliveryDso) {
@@ -44,6 +44,26 @@ export class DeliveryService {
   async setStatus(id: string, status: DeliveryStatus): Promise<Delivery> {
     const value = await this.model.findOneAndUpdate({_id: id}, {
       $set: { status: status },
+    },
+    {new: true})
+    return value
+  }
+
+  async setPickedUp(id: string) {
+    const value = await this.model.findOneAndUpdate(
+      {_id: id}, 
+      {
+        $set: { status: DeliveryStatus.EnRoute, pickupTime: new Date() }
+    },
+    {new: true})
+    return value
+  }
+
+  async setDroppedOff(id: string) {
+    const value = await this.model.findOneAndUpdate(
+      {_id: id}, 
+      {
+        $set: { status: DeliveryStatus.Delivered, dropoffTime: new Date() }
     },
     {new: true})
     return value

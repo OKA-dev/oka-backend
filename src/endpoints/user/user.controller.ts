@@ -8,6 +8,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
   Query,
   Request,
   UnauthorizedException,
@@ -20,67 +21,79 @@ import { Public } from 'src/auth/public'
 import { EventType } from 'src/event/event-type.enum'
 import { UserCreatedEvent } from 'src/event/events/user/user-events.schema'
 import { ObjectValidationPipe } from 'src/common/pipes/object.validation.pipe'
-import { PasswordHashPipe } from 'src/common/pipes/password.hash.pipe'
+import { PasswordHashPipe, PasswordStarPipe } from 'src/common/pipes/password.hash.pipe'
 import { PhoneNumberTransformPipe } from 'src/common/pipes/phone.transform.pipe'
 import { Roles } from 'src/common/role.decorator'
 import { Role } from 'src/common/role.enum'
 import { AddressValidator, AddressDso, AddressDto } from 'src/data/addressdata/address.dto'
-import { AddressService } from 'src/data/addressdata/address.service'
+import { AddressDataService } from 'src/data/addressdata/address.data.service'
 import { AddressTransformPipe } from 'src/data/addressdata/pipes/address.transform.pipe'
-import { UserDtoValidator, UserDto } from 'src/data/userdata/user.dto'
-import { UserService } from '../../data/userdata/user.service'
+import { UserDto, EmailSignupDto, EmailSignupDtoValidator } from 'src/data/userdata/user.dto'
+import { UserDataService } from '../../data/userdata/user.data.service'
 import { ApiBody, ApiTags } from '@nestjs/swagger'
 import { FilesInterceptor } from '@nestjs/platform-express'
 import { CloudStorageService } from 'src/common/services/cloud-storage.service'
-import { PhotoService } from 'src/data/photo/photo.service'
+import { PhotoDataService } from 'src/data/photo/photo.data.service'
 import { Photo } from 'src/data/photo/photo.schema'
-import { FederatedSignupDtoValidator, FederatedDto } from 'src/auth/federated.dto'
+import { FederatedSignupDtoValidator, FederatedDto, FederatedSignupDto } from 'src/auth/federated.dto'
 import { UserAccountType } from 'src/data/userdata/user.schema'
 import { AuthService } from 'src/auth/auth.service'
+import { PhoneNumber } from 'src/data/addressdata/phonenumber'
 
 @ApiTags('Users')
 @Controller('users')
 export class UserController {
   constructor(
-    private userService: UserService,
+    private userService: UserDataService,
     private authService: AuthService,
-    private addressService: AddressService,
+    private addressService: AddressDataService,
     private cloudService: CloudStorageService,
-    private photoService: PhotoService,
+    private photoService: PhotoDataService,
     private eventEmitter: EventEmitter2,
   ) {}
 
   @Public()
   @Post()
-  @UsePipes(new ObjectValidationPipe(UserDtoValidator))
+  @UsePipes(new ObjectValidationPipe(EmailSignupDtoValidator))
   async create(
-    @Body(PhoneNumberTransformPipe, PasswordHashPipe) user: UserDto,
+    @Body(PasswordHashPipe) body: EmailSignupDto,
   ) {
+    let user = body.user
+    const phone = await this.verifyPhoneToken(body.phoneVerificationToken)
+    if (!phone) {
+      throw new BadRequestException('Invalid phone verification token')
+    }
+    user.phone = phone
     const createdUser = await this.userService.create(user)
     createdUser.password = undefined
     this.eventEmitter.emit(EventType.UserAccountCreated, new UserCreatedEvent(createdUser))
     return createdUser
   }
 
-
   @Public()
   @Post('/federated')
   async federatedStartSignup(
-    @Body(new ObjectValidationPipe(FederatedSignupDtoValidator), PhoneNumberTransformPipe)body: FederatedDto, 
+    @Body(new ObjectValidationPipe(FederatedSignupDtoValidator))body: FederatedSignupDto, 
     @Request() req
     ) {
+    const phone = await this.verifyPhoneToken(body.phoneVerificationToken)
+    if (!phone) {
+      throw new BadRequestException('Invalid phone verification token')
+    }
     let userObject
     if (body.type == UserAccountType.Google) {
-      userObject = await this.authService.validateGoogleToken(body.token)
+      userObject = await this.authService.validateGoogleToken(body.federatedToken)
     } else if (body.type == UserAccountType.Facebook) {
-      userObject = await this.authService.validateFacebookToken(body.token)
+      userObject = await this.authService.validateFacebookToken(body.federatedToken)
     } else {
       throw new BadRequestException(`Unsupported federated login: ${body.type}`)
     }
 
     userObject = {
       ...userObject,
-      phone: body.phone
+      accountType: body.type,
+      password: '******',
+      phone: phone
     }
 
     if (!userObject || !userObject.name || !userObject.email) {
@@ -91,8 +104,10 @@ export class UserController {
     if (existingUser) {
       throw new ConflictException('User with email already exists')
     }
-    const user = await this.userService.create(userObject)
-    return user
+    const createdUser = await this.userService.create(userObject)
+    createdUser.password = undefined
+    this.eventEmitter.emit(EventType.UserAccountCreated, new UserCreatedEvent(createdUser))
+    return createdUser
   }
   
   @Roles(Role.User)
@@ -163,9 +178,27 @@ export class UserController {
     return result
   }
 
+  @Roles(Role.User)
+  @Put('/location')
+  async updateLocation() {
+    
+  }
+
   @Get('/random')
   @Roles(Role.User)
   async findByEmail(@Query('email') email: string) {
     return { status: 'ok' }
+  }
+
+  private async verifyPhoneToken(token: string): Promise<PhoneNumber> {
+    const jwtPayload = await this.authService.jwtVerify(token)
+    if (!(jwtPayload.countryCode && jwtPayload.number && jwtPayload.e164)) {
+      return null
+    }
+    const phone = new PhoneNumber()
+    phone.countryCode = jwtPayload.countryCode
+    phone.number = jwtPayload.number
+    phone.e164 = jwtPayload.e164 
+    return phone
   }
 }

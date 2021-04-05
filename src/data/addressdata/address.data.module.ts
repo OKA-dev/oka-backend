@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Address, AddressSchema } from './address.schema';
-import { AddressService } from './address.service';
+import { AddressDataService } from './address.data.service';
 
 @Module({
   imports: [
@@ -9,7 +9,7 @@ import { AddressService } from './address.service';
       { name: Address.name, schema: AddressSchema },
     ]),
   ],
-  providers: [AddressService],
-  exports: [AddressService],
+  providers: [AddressDataService],
+  exports: [AddressDataService],
 })
 export class AddressDataModule {}

@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import * as mongoose from 'mongoose'
 import { Event } from './event.schema'
-import { DeliveryCancelledEvent, DeliveryCancelledEventDocument, DeliveryConfirmedEvent, DeliveryConfirmedEventDocument, DeliveryCreatedEvent, DeliveryCreatedEventDocument, DeliveryDroppedOffEvent, DeliveryDroppedOffEventDocument, DeliveryPickedUpEvent, DeliveryPickedUpEventDocument, DeliveryPickedUpEventSchema, DeliveryProblemEvent, DeliveryProblemEventDocument } from './events/delivery/delivery-events.schema'
+import { DeliveryCancelledEvent, DeliveryCancelledEventDocument, DeliveryConfirmedEvent, DeliveryConfirmedEventDocument, DeliveryCreatedEvent, DeliveryCreatedEventDocument, DeliveryDroppedOffEvent, DeliveryDroppedOffEventDocument, DeliveryPickedUpEvent, DeliveryPickedUpEventDocument, DeliveryPickedUpEventSchema, DeliveryProblemEvent, DeliveryProblemEventDocument, DeliveryRiderCancelledEvent, DeliveryRiderCancelledEventDocument } from './events/delivery/delivery-events.schema'
 import {
   RiderCreatedEvent,
   RiderCreatedEventDocument,
@@ -21,6 +21,7 @@ export class EventService {
     @InjectModel(DeliveryCreatedEvent.name) private deliveryCreatedModel: Model<DeliveryCreatedEventDocument>,
     @InjectModel(DeliveryConfirmedEvent.name) private deliveryConfirmedModel: Model<DeliveryConfirmedEventDocument>,
     @InjectModel(DeliveryCancelledEvent.name) private deliveryCancelledModel: Model<DeliveryCancelledEventDocument>,
+    @InjectModel(DeliveryRiderCancelledEvent.name) private deliveryRiderCancelledModel: Model<DeliveryRiderCancelledEventDocument>,
     @InjectModel(DeliveryPickedUpEvent.name) private deliveryPickedUpModel: Model<DeliveryPickedUpEventDocument>,
     @InjectModel(DeliveryDroppedOffEvent.name) private deliveryDroppedOffModel: Model<DeliveryDroppedOffEventDocument>,
     @InjectModel(DeliveryProblemEvent.name) private deliveryProblemModel: Model<DeliveryProblemEventDocument>,
@@ -38,6 +39,11 @@ export class EventService {
 
   async saveDeliveryCancelled(event: DeliveryCancelledEvent): Promise<DeliveryCancelledEvent> {
     const newModel = await this.deliveryCancelledModel.create(event)
+    return newModel.save()
+  }
+
+  async saveDeliveryRiderCancelled(event: DeliveryRiderCancelledEvent): Promise<DeliveryRiderCancelledEvent> {
+    const newModel = await this.deliveryRiderCancelledModel.create(event)
     return newModel.save()
   }
 

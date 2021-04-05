@@ -4,14 +4,14 @@ import { AppConfigService } from 'src/appconfig/app.config.service'
 import { Role } from 'src/common/role.enum'
 import { Hasher } from 'src/common/util/hasher'
 import { User } from 'src/data/userdata/user.schema'
-import { UserService } from 'src/data/userdata/user.service'
+import { UserDataService } from 'src/data/userdata/user.data.service'
 import { FacebookAuthStrategy } from './strategies/facebook-auth.strategy'
 import { GoogelAuthStrategy } from './strategies/google-auth.strategy'
 
 @Injectable()
 export class AuthService {
   constructor(
-    private userService: UserService,
+    private userService: UserDataService,
     private jwtService: JwtService,
     private appConfig: AppConfigService,
     private googelAuth: GoogelAuthStrategy,
@@ -61,5 +61,14 @@ export class AuthService {
 
   async validateFacebookToken(token: string): Promise<any> {
     return await this.facebookAuth.process(token)
+  }
+
+  async jwtSign(phone: any): Promise<string> {
+    const token = this.jwtService.sign(phone)
+    return token
+  }
+
+  async jwtVerify(token: string): Promise<any> {
+    return await this.jwtService.verify(token)
   }
 }

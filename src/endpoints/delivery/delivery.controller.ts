@@ -9,7 +9,7 @@ import { Delivery, DeliveryProblem, DeliveryStatus } from 'src/data/deliverydata
 import { DeliveryTransformPipe } from 'src/data/deliverydata/pipes/delivery.transform.pipe';
 import { EventType } from 'src/event/event-type.enum';
 import { DeliveryCancelledEvent, DeliveryConfirmedEvent, DeliveryCreatedEvent, DeliveryDroppedOffEvent, DeliveryPickedUpEvent, DeliveryProblemEvent, DeliveryRiderCancelledEvent } from 'src/event/events/delivery/delivery-events.schema';
-import { DeliveryService } from '../../data/deliverydata/delivery.service';
+import { DeliveryDataService } from '../../data/deliverydata/delivery.data.service';
 import * as mongoose from 'mongoose'
 import { DeliveryConfirmationService } from 'src/data/deliverydata/delivery.confirmation.service';
 import { DeliveryConfirmation } from 'src/data/deliverydata/delivery.confirmation.schema';
@@ -19,7 +19,7 @@ import { DeliveryConfirmation } from 'src/data/deliverydata/delivery.confirmatio
 export class DeliveryController {
 
   constructor(
-    private deliveryService: DeliveryService,
+    private deliveryService: DeliveryDataService,
     private confirmationService: DeliveryConfirmationService,
     private eventEmitter: EventEmitter2) {}
 

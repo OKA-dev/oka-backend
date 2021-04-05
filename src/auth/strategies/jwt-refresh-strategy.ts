@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
 import { AppConfigService } from "src/appconfig/app.config.service";
-import { UserService } from "src/data/userdata/user.service";
+import { UserDataService } from "src/data/userdata/user.data.service";
 import { JwtService } from '@nestjs/jwt'
 import { Hasher } from "src/common/util/hasher";
 
@@ -10,7 +10,7 @@ import { Hasher } from "src/common/util/hasher";
 export class JwtRefreshStrategy extends  PassportStrategy(Strategy, 'jwt-refresh-token') {
   constructor(
     private appConfig: AppConfigService,
-    private userService: UserService,
+    private userService: UserDataService,
     private jwtService: JwtService,
     ) {
     super({

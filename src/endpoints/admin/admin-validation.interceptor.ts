@@ -8,11 +8,11 @@ import {
 import { Observable } from 'rxjs'
 import { Role } from 'src/common/role.enum'
 import { User } from 'src/data/userdata/user.schema'
-import { UserService } from 'src/data/userdata/user.service'
+import { UserDataService } from 'src/data/userdata/user.data.service'
 
 @Injectable()
 export class AdminValidationInterceptor implements NestInterceptor {
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserDataService) {}
 
   async intercept(
     context: ExecutionContext,

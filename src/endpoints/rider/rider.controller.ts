@@ -10,10 +10,10 @@ import { Roles } from 'src/common/role.decorator';
 import { Role } from 'src/common/role.enum';
 import { CloudStorageService } from 'src/common/services/cloud-storage.service';
 import { Identity, DocumentType, DocumentState } from 'src/data/document/identity.schema';
-import { IdentityService } from 'src/data/document/identity.service';
+import { IdentityDataService } from 'src/data/document/identity.data.service';
 import { IdentityValidator } from 'src/data/document/identity.validator';
 import { UserDtoValidator, UserDto } from 'src/data/userdata/user.dto';
-import { UserService } from 'src/data/userdata/user.service';
+import { UserDataService } from 'src/data/userdata/user.data.service';
 import { EventType } from 'src/event/event-type.enum';
 import { UserCreatedEvent } from 'src/event/events/user/user-events.schema';
 
@@ -21,8 +21,8 @@ import { UserCreatedEvent } from 'src/event/events/user/user-events.schema';
 @Controller('riders')
 export class RiderController {
   constructor(
-    private userService: UserService,
-    private identityService: IdentityService,
+    private userService: UserDataService,
+    private identityService: IdentityDataService,
     private cloudService: CloudStorageService,
     private eventEmitter: EventEmitter2,
   ) {}

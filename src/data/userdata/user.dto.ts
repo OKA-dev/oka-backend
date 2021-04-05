@@ -2,23 +2,20 @@ import { ApiProperty } from '@nestjs/swagger'
 import { IsEmail, IsInt, IsObject, IsString } from 'class-validator'
 import * as Joi from 'joi'
 import { Role } from 'src/common/role.enum'
+import { PhoneNumber } from '../addressdata/phonenumber'
 
-export class PhoneNumberDto {
-  @IsInt()
-  @ApiProperty()
-  number: string
-
-  @IsInt()
-  @ApiProperty()
-  countryCode: string
-
-  e164: string
+export interface PhoneNumberWrapper {
+  phone: PhoneNumber
 }
 
 export class UserDto {
   @IsString()
   @ApiProperty()
-  name: string
+  firstname: string
+
+  @IsString()
+  @ApiProperty()
+  lastname: string
 
   @IsEmail()
   @ApiProperty()
@@ -28,11 +25,17 @@ export class UserDto {
   @ApiProperty()
   password: string
 
-  @IsObject()
-  @ApiProperty()
-  phone: PhoneNumberDto
+  phone?: PhoneNumber
 
   roles?: Role[]
+}
+
+export class EmailSignupDto {
+  @ApiProperty()
+  user: UserDto
+
+  @ApiProperty()
+  phoneVerificationToken: string
 }
 
 export const PhoneNumberValidator = Joi.object({
@@ -44,5 +47,10 @@ export const UserDtoValidator = Joi.object({
   name: Joi.string().required(),
   email: Joi.string().email({ minDomainSegments: 2 }).required(),
   password: Joi.string().required(),
-  phone: PhoneNumberValidator.required(),
+  phone: PhoneNumberValidator,
+})
+
+export const EmailSignupDtoValidator = Joi.object({
+  user: UserDtoValidator.required(),
+  phoneVerificationToken: Joi.string().required(),
 })
