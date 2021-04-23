@@ -1,7 +1,7 @@
-import { Injectable } from "@nestjs/common";
-import { AppConfigService } from "src/appconfig/app.config.service";
+import { Injectable } from '@nestjs/common'
+import { AppConfigService } from 'src/appconfig/app.config.service'
 import { Twilio } from 'twilio'
-import { MessageInstance } from "twilio/lib/rest/api/v2010/account/message";
+import { MessageInstance } from 'twilio/lib/rest/api/v2010/account/message'
 
 @Injectable()
 export class SmsMessagingService {
@@ -13,7 +13,7 @@ export class SmsMessagingService {
 
   async sendSMS(phoneNumber: string, message: string): Promise<MessageInstance> {
     const response = await this.client.messages.create({
-      from: this.config.twilioPhoneNumber,
+      messagingServiceSid: this.config.twilioMessagingServiceId,
       to: phoneNumber,
       body: message
     })

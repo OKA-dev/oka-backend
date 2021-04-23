@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 import * as Joi from 'joi'
-import { LatLong, Point } from 'src/common/models/geojson'
+import { LatLong, LatLongValidator, Point } from 'src/common/models/geojson'
 
 export class AddressDto {
   @ApiProperty({ description: 'The name for this address. E.g. "Home" or "Work"' })
@@ -39,11 +39,6 @@ export class AddressDso {
     return dso
   } 
 }
-
-export const LatLongValidator = Joi.object({
-  latitude: Joi.number().required(),
-  longitude: Joi.number().required()
-})
 
 export const AddressValidator = Joi.object({
   label: Joi.string().required(),

@@ -1,6 +1,6 @@
 import * as Joi from 'joi'
-import { string } from 'joi';
-import { AddressDso, AddressDto, LatLongValidator } from '../addressdata/address.dto';
+import { LatLongValidator } from 'src/common/models/geojson';
+import { AddressDso, AddressDto } from '../addressdata/address.dto';
 
 export class DeliveryDto {
   start: AddressDto

@@ -61,6 +61,10 @@ export class AppConfigService {
     return this.configService.get('TWILIO_PHONE_NUMBER')
   }
 
+  get twilioMessagingServiceId(): string {
+    return this.configService.get('TWILIO_MESSAGING_SERVICE_SID')
+  }
+
   get verificationService(): string {
     return this.configService.get('VERIFICATION_SERVICE')
   }

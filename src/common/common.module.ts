@@ -1,5 +1,6 @@
 import { Global, HttpModule, Module } from '@nestjs/common'
 import { AppconfigModule } from 'src/appconfig/appconfig.module'
+import { UserDataModule } from 'src/data/userdata/user.data.module'
 import { VerificationDataModule } from 'src/data/verifications/verification.data.module'
 import { CloudStorageService } from './services/cloud-storage.service'
 import { DeliveryCoordinatorService } from './services/delivery-coordinator.service'
@@ -10,7 +11,7 @@ import { TwilioVerificationService } from './services/twilio-verification.servic
 
 @Global()
 @Module({
-  imports: [AppconfigModule, VerificationDataModule, HttpModule],
+  imports: [AppconfigModule, UserDataModule, VerificationDataModule, HttpModule],
   providers: [
     CloudStorageService, 
     PushNotificationService, 

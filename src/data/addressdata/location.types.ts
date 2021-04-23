@@ -19,4 +19,9 @@ export const phoneType = {
 export class TimedLocation {
   time: Date
   geolocation: Point
+
+  constructor(time: Date, location: Point) {
+    this.time = time
+    this.geolocation = location
+  }
 }

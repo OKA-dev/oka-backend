@@ -21,24 +21,26 @@ import { Public } from 'src/auth/public'
 import { EventType } from 'src/event/event-type.enum'
 import { UserCreatedEvent } from 'src/event/events/user/user-events.schema'
 import { ObjectValidationPipe } from 'src/common/pipes/object.validation.pipe'
-import { PasswordHashPipe, PasswordStarPipe } from 'src/common/pipes/password.hash.pipe'
-import { PhoneNumberTransformPipe } from 'src/common/pipes/phone.transform.pipe'
+import { PasswordHashPipe } from 'src/common/pipes/password.hash.pipe'
 import { Roles } from 'src/common/role.decorator'
 import { Role } from 'src/common/role.enum'
 import { AddressValidator, AddressDso, AddressDto } from 'src/data/addressdata/address.dto'
 import { AddressDataService } from 'src/data/addressdata/address.data.service'
 import { AddressTransformPipe } from 'src/data/addressdata/pipes/address.transform.pipe'
-import { UserDto, EmailSignupDto, EmailSignupDtoValidator } from 'src/data/userdata/user.dto'
+import {  EmailSignupDto, EmailSignupDtoValidator } from 'src/data/userdata/user.dto'
 import { UserDataService } from '../../data/userdata/user.data.service'
 import { ApiBody, ApiTags } from '@nestjs/swagger'
 import { FilesInterceptor } from '@nestjs/platform-express'
 import { CloudStorageService } from 'src/common/services/cloud-storage.service'
 import { PhotoDataService } from 'src/data/photo/photo.data.service'
 import { Photo } from 'src/data/photo/photo.schema'
-import { FederatedSignupDtoValidator, FederatedDto, FederatedSignupDto } from 'src/auth/federated.dto'
+import { FederatedSignupDtoValidator, FederatedSignupDto } from 'src/auth/federated.dto'
 import { UserAccountType } from 'src/data/userdata/user.schema'
 import { AuthService } from 'src/auth/auth.service'
 import { PhoneNumber } from 'src/data/addressdata/phonenumber'
+import { LocationTransformPipe } from 'src/common/pipes/location-transform.pipe'
+import { LatLongValidator, Point } from 'src/common/models/geojson'
+import { TimedLocation } from 'src/data/addressdata/location.types'
 
 @ApiTags('Users')
 @Controller('users')
@@ -179,15 +181,12 @@ export class UserController {
   }
 
   @Roles(Role.User)
+  @UsePipes(new ObjectValidationPipe(LatLongValidator))
   @Put('/location')
-  async updateLocation() {
-    
-  }
-
-  @Get('/random')
-  @Roles(Role.User)
-  async findByEmail(@Query('email') email: string) {
-    return { status: 'ok' }
+  async updateLocation(@Body(new LocationTransformPipe())point: Point, @Request() req) {
+    let timedLocation = new TimedLocation(new Date(), point)
+    let result = await this.userService.setLocation(req.user._id, timedLocation)
+    return result
   }
 
   private async verifyPhoneToken(token: string): Promise<PhoneNumber> {

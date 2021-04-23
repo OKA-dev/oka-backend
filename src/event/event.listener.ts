@@ -24,11 +24,11 @@ export class GlobalEventListener {
     await this.eventService.saveUserCreated(payload)
   }
 
-  @OnEvent(EventType.DeliveryCreated)
+  @OnEvent(EventType.DeliveryCreated, { nextTick: true })
   async handleDeliveryCreated(event: DeliveryCreatedEvent) {
-    await this.eventService.saveDeliveryCreated(event)
+    const createdEvent = await this.eventService.saveDeliveryCreated(event)
     await this.deliveryCoordinator.processDeliveryCreated(event.delivery)
-    const delivery = event.delivery
+    console.log('finished handling')
   }
 
   @OnEvent(EventType.DeliveryCancelled)

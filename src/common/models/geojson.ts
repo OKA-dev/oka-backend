@@ -1,5 +1,5 @@
-import { ApiProperty } from "@nestjs/swagger"
-
+import { ApiProperty } from '@nestjs/swagger'
+import * as Joi from 'joi'
 
 export type NumberPair = [number, number]
 
@@ -54,3 +54,8 @@ export class LatLong {
   @ApiProperty()
   longitude: number
 }
+
+export const LatLongValidator = Joi.object({
+  latitude: Joi.number().required(),
+  longitude: Joi.number().required()
+})

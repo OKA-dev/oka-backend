@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
+import { Point } from 'src/common/models/geojson'
+import { Role } from 'src/common/role.enum'
 import { CloudStorageService } from 'src/common/services/cloud-storage.service'
 import { TimedLocation } from '../addressdata/location.types'
 import { Photo } from '../photo/photo.schema'
@@ -70,7 +72,8 @@ export class UserDataService {
   async setLocation(userId: string, location: TimedLocation) {
     return await this.model.findOneAndUpdate(
       {_id: userId},
-      {$set: {lastKnownLocation: location}}
+      {$set: {lastKnownLocation: location}},
+      { new: true }
     )
   }
   async withPhotoUrls(user: User) {
@@ -83,4 +86,45 @@ export class UserDataService {
       return user
     }
   }
+
+  /**
+   * 
+   * @param point GeoJSON location to find users close to
+   * @param maxDistance Maximum distance in meters to search.
+   */
+  async nearestUsers(point: Point, maxDistance: number) {
+    return await this.model.find({
+        'lastKnownLocation.geolocation': {
+          $nearSphere: {
+            $geometry: {
+              point
+            },
+            maxDistance: maxDistance,
+          }
+        }
+    })
+  }
+
+  async nearestRiders(point: Point, maxDistance: number, lastUpdated: number): Promise<User[]> {
+    // Criteria
+    // - lastKnownLocation.geolocation - near package.start
+    // - lastKnownLocation.time >= now - 10 minutes
+    let now = new Date()
+    return await this.model.find({
+      'lastKnownLocation.geolocation': {
+        $nearSphere: {
+          $geometry: {
+            type: 'Point',
+            coordinates: point.coordinates,
+          },
+          $maxDistance: maxDistance
+        }
+      },
+      'lastKnownLocation.time': {
+        $gte: new Date(now.getTime() - 1000 * 60 * lastUpdated)
+      },
+      'roles': Role.Rider
+    })
+  }
+
 }

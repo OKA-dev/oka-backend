@@ -1,6 +1,10 @@
 export default class Localization {
   static strings = {
     delivery: {
+      created: {
+        title: 'Pickup request created!',
+        message: 'Great news! A pickup request has been created in your area. Tap to pick up this package.',
+      },
       confirmed: {
         title: 'Delivery Confirmed',
         message: 'Your rider is on the way to pick up your package. Please ensure the package is properly secured and ready for pickup.',
