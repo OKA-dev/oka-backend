@@ -1,4 +1,5 @@
-import { BadRequestException, HttpService, Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
+import { HttpService } from '@nestjs/axios'
 import { PassportStrategy } from '@nestjs/passport'
 import { Request } from 'express'
 import { Profile, Strategy } from 'passport-facebook'

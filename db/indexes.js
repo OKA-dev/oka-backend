@@ -11,6 +11,7 @@ db.users.createIndex({
   'lastKnownLocation.time': 1,
   'roles': 1
 })
+db.countries.createIndex({'name': 1}, {'unique': true})
 
 
 // deliveries

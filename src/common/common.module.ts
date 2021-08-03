@@ -1,4 +1,5 @@
-import { Global, HttpModule, Module } from '@nestjs/common'
+import { Global, Module } from '@nestjs/common'
+import { HttpModule } from '@nestjs/axios'
 import { AppconfigModule } from 'src/appconfig/appconfig.module'
 import { UserDataModule } from 'src/data/userdata/user.data.module'
 import { VerificationDataModule } from 'src/data/verifications/verification.data.module'

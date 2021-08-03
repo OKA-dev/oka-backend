@@ -1,4 +1,5 @@
-import { HttpModule, Module } from '@nestjs/common'
+import { Module } from '@nestjs/common'
+import { HttpModule } from '@nestjs/axios'
 import { PassportModule } from '@nestjs/passport'
 import { AuthService } from './auth.service'
 import { LocalStrategy } from './strategies/local.strategy'

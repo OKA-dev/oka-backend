@@ -18,6 +18,8 @@ import { DeliverydataModule } from './data/deliverydata/deliverydata.module';
 import { DeliveryModule } from './endpoints/delivery/delivery.module';
 import { RiderEndpointModule } from './endpoints/rider/rider.endpoint.module';
 import { VerificationDataModule } from './data/verifications/verification.data.module'
+import { CountryDataModule } from './data/countrydata/country.data.module'
+import { CountryEndpointModule } from './endpoints/country/country.endpoint.module'
 
 let envFilePath = '.env'
 const ENV = process.env.NODE_ENV
@@ -48,12 +50,14 @@ if (ENV == 'development') {
     CommonModule,
     UserEndpointModule,
     AdminEndpointModule,
+    CountryEndpointModule,
     AuthModule,
     AppconfigModule,
     EventModule,
     UserDataModule,
     VerificationDataModule,
     AddressDataModule,
+    CountryDataModule,
     DeliverydataModule,
     DeliveryModule,
     RiderEndpointModule,
