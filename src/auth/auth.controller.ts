@@ -81,6 +81,7 @@ export class AuthController {
   async startVerification(@Body(PhoneNumberTransformPipe) body: PhoneDto) {
     const phoneNumber = body.phone
     const result = this.verificationService.startVerification(phoneNumber)
+    console.log('returning result: ', JSON.stringify(result))
     return result
   }
 
