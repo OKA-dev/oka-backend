@@ -23,7 +23,7 @@ export class AddressDataService {
     return await this.addressModel.find(query).exec()
   }
 
-  async deleteAddress(id: string) {
+  async deleteAddress(id: string): Promise<any> {
     return await this.addressModel.deleteOne({_id: new mongoose.Types.ObjectId(id)})
   }
 }

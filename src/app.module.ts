@@ -7,6 +7,7 @@ import { CommonModule } from './common/common.module'
 import { AppConfigService } from './appconfig/app.config.service'
 import { ConfigModule } from '@nestjs/config'
 import { MongooseModule } from '@nestjs/mongoose'
+import { ThrottlerModule } from '@nestjs/throttler'
 import { logger } from './common/util/logger'
 import { AppconfigModule } from './appconfig/appconfig.module';
 import { EventModule } from './event/event.module';
@@ -35,12 +36,28 @@ if (ENV == 'development') {
       isGlobal: true,
       cache: true,
     }),
+    ThrottlerModule.forRoot([{
+      name: 'short',
+      ttl: 1000,
+      limit: 5,
+    },
+    {
+      name: 'medium',
+      ttl: 10000,
+      limit: 20
+    },
+    {
+      name: 'long',
+      ttl: 60000,
+      limit: 500
+    }
+  ]),
     MongooseModule.forRootAsync({
       imports: [AppconfigModule],
       useFactory: async (configService: AppConfigService) => ({
         uri: configService.dbUri,
-        useCreateIndex: true,
-        useFindAndModify: false,
+        // useCreateIndex: true,
+        // useFindAndModify: false,
       }),
       inject: [AppConfigService],
     }),
