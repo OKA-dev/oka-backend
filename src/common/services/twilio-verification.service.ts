@@ -15,7 +15,9 @@ export class TwilioVerificationService implements VerificationService {
     if (!phoneNumber.e164) {
       throw new InternalServerErrorException('Could not determing e164 number')
     }
-    const result = await this.client.verify.services(this.config.twilioVerifySID).verifications.create({
+    const result = await this.client.verify.v2.services(this.config.twilioVerifySID)
+    .verifications
+    .create({
       to: phoneNumber.e164,
       channel: 'sms'
     })

@@ -13,7 +13,7 @@ export class SmsMessagingService {
 
   async sendSMS(phoneNumber: string, message: string): Promise<MessageInstance> {
     const response = await this.client.messages.create({
-      messagingServiceSid: this.config.twilioMessagingServiceId,
+      // messagingServiceSid: this.config.twilioMessagingServiceId,
       to: phoneNumber,
       body: message
     })
