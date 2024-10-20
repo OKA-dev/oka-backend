@@ -27,7 +27,7 @@ async function bootstrap() {
     region: configService.get('AWS_REGION'),
   })
   configureSwagger(app)
-  await app.listen(configService.get('PORT'))
+  await app.listen(configService.get('PORT_NO'))
   app.use(csurf())
 }
 
