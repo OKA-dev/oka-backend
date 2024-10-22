@@ -5,17 +5,17 @@ import { ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/auth/public';
 import { ObjectValidationPipe } from 'src/common/pipes/object.validation.pipe';
 import { PasswordHashPipe } from 'src/common/pipes/password.hash.pipe';
-import { PhoneNumberTransformPipe } from 'src/common/pipes/phone.transform.pipe';
 import { Roles } from 'src/common/role.decorator';
 import { Role } from 'src/common/role.enum';
 import { CloudStorageService } from 'src/common/services/cloud-storage.service';
 import { Identity, DocumentType, DocumentState } from 'src/data/document/identity.schema';
 import { IdentityDataService } from 'src/data/document/identity.data.service';
 import { IdentityValidator } from 'src/data/document/identity.validator';
-import { UserDtoValidator, UserDto } from 'src/data/userdata/user.dto';
+import { EmailSignupDtoNoPhoneVerificationValidator, EmailSignupDtoNoVerification } from 'src/data/userdata/user.dto';
 import { UserDataService } from 'src/data/userdata/user.data.service';
 import { EventType } from 'src/event/event-type.enum';
 import { UserCreatedEvent } from 'src/event/events/user/user-events.schema';
+import { PhoneNumberTransformPipe } from 'src/common/pipes/phone.transform.pipe';
 
 @ApiTags('Riders')
 @Controller('riders')
@@ -29,13 +29,16 @@ export class RiderController {
 
   @Public()
   @Post()
-  @UsePipes(new ObjectValidationPipe(UserDtoValidator))
+  @UsePipes(new ObjectValidationPipe(EmailSignupDtoNoPhoneVerificationValidator))
   async create(
-    @Body(PhoneNumberTransformPipe, PasswordHashPipe) user: UserDto,
+    @Body(PasswordHashPipe, PhoneNumberTransformPipe) body: EmailSignupDtoNoVerification,
   ) {
+    const user = body.user
     user.roles = [Role.Rider]
+    user.phone = body.phone
     const createdUser = await this.userService.create(user)
     createdUser.password = undefined
+
     this.eventEmitter.emit(EventType.UserAccountCreated, new UserCreatedEvent(createdUser))
     return createdUser
   }
