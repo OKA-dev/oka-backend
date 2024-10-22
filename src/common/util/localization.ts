@@ -11,11 +11,11 @@ export default class Localization {
       },
       cancelled: {
         title: 'Package cancelled',
-        message: 'The sender has cancelled this pickup request. Please contact support if you have any questions.',
+        message: 'The sender has cancelled this pickup request.',
       },
       riderCancelled: {
         title: 'Rider cancelled package',
-        message: 'The rider has cancelled this delivery. Please contact support if you need any assistance.',
+        message: 'The courier has cancelled this delivery. Wait a sec while we find another courier for you.',
       },
       pickedUp: {
         title: 'Package on it\'s way 🛵',

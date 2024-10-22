@@ -12,7 +12,6 @@ export class ObjectValidationPipe implements PipeTransform {
 
   transform(value: any, metadata: ArgumentMetadata) {
     const { error } = this.schema.validate(value)
-    console.log('validation pipe received: ', JSON.stringify(value))
     if (error) {
       throw new BadRequestException(error, 'Validation failed')
     }

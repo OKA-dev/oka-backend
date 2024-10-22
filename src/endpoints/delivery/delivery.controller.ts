@@ -8,7 +8,7 @@ import { DelieryProblemValidator, DeliveryDropOffValidator, DeliveryDso, Deliver
 import { Delivery, DeliveryProblem, DeliveryStatus } from 'src/data/deliverydata/delivery.schema';
 import { DeliveryTransformPipe } from 'src/data/deliverydata/pipes/delivery.transform.pipe';
 import { EventType } from 'src/event/event-type.enum';
-import { DeliveryCancelledEvent, DeliveryConfirmedEvent, DeliveryCreatedEvent, DeliveryDroppedOffEvent, DeliveryPickedUpEvent, DeliveryProblemEvent, DeliveryRiderCancelledEvent } from 'src/event/events/delivery/delivery-events.schema';
+import { DeliveryCancelledEvent, DeliveryRiderAcceptedEvent, DeliveryCreatedEvent, DeliveryRiderDropoffEvent, DeliveryRiderPickupEvent, DeliveryProblemEvent, DeliveryRiderCancelEvent } from 'src/event/events/delivery/delivery-events.schema';
 import { DeliveryDataService } from '../../data/deliverydata/delivery.data.service';
 import * as mongoose from 'mongoose'
 import { DeliveryConfirmationService } from 'src/data/deliverydata/delivery.confirmation.service';
@@ -94,7 +94,7 @@ export class DeliveryController {
       throw new ForbiddenException()
     }
     delivery = await this.deliveryService.setStatusAndRider(id, DeliveryStatus.Pending, undefined)
-    this.eventEmitter.emit(EventType.DeliveryCancelled, new DeliveryRiderCancelledEvent(
+    this.eventEmitter.emit(EventType.DeliveryCancelled, new DeliveryRiderCancelEvent(
       delivery, 
       body.reason,
       new mongoose.Types.ObjectId(req.user._id)
@@ -103,7 +103,7 @@ export class DeliveryController {
     return delivery
   }
 
-  @Patch(':id/rider/confirm')
+  @Patch(':id/rider/accept')
   @Roles(Role.Rider)
   async confirmDelivery(@Param() params, @Request() req) {
     const id = params.id
@@ -123,7 +123,7 @@ export class DeliveryController {
     if (delivery.rider._id != req.user._id) {
       throw new ConflictException()
     }
-    this.eventEmitter.emit(EventType.DeliveryConfirmed, new DeliveryConfirmedEvent(delivery))
+    this.eventEmitter.emit(EventType.DeliveryRiderAccepted, new DeliveryRiderAcceptedEvent(delivery))
 
     return delivery
   }
@@ -140,7 +140,7 @@ export class DeliveryController {
       throw new ForbiddenException()
     }
     delivery = await this.deliveryService.setStatus(id, DeliveryStatus.EnRoute)
-    this.eventEmitter.emit(EventType.DeliveryPickedUp, new DeliveryPickedUpEvent(delivery))
+    this.eventEmitter.emit(EventType.DeliveryRiderPickup, new DeliveryRiderPickupEvent(delivery))
     return delivery
   }
 
@@ -166,7 +166,7 @@ export class DeliveryController {
       throw new BadRequestException()
     }
     delivery = await this.deliveryService.setStatus(id, DeliveryStatus.Delivered)
-    this.eventEmitter.emit(EventType.DeliveryDroppedOff, new DeliveryDroppedOffEvent(delivery))
+    this.eventEmitter.emit(EventType.DeliveryRiderDropOff, new DeliveryRiderDropoffEvent(delivery))
     return delivery
   }
 
@@ -217,9 +217,11 @@ export class DeliveryController {
   }
 
   private generateConfirmationCode(): string {
-    const min = 10000
-    const max = 99999
-    return Math.floor(Math.random() * (max - min) + min).toString()
+    const min = 100
+    const max = 999999
+    const num =  Math.floor(Math.random() * (max - min) + min)
+    
+    return String(num).padStart(6, '0')
   }
 
 }

@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import * as mongoose from 'mongoose'
 import { Event } from './event.schema'
-import { DeliveryCancelledEvent, DeliveryCancelledEventDocument, DeliveryConfirmedEvent, DeliveryConfirmedEventDocument, DeliveryCreatedEvent, DeliveryCreatedEventDocument, DeliveryDroppedOffEvent, DeliveryDroppedOffEventDocument, DeliveryPickedUpEvent, DeliveryPickedUpEventDocument, DeliveryPickedUpEventSchema, DeliveryProblemEvent, DeliveryProblemEventDocument, DeliveryRiderCancelledEvent, DeliveryRiderCancelledEventDocument } from './events/delivery/delivery-events.schema'
+import { DeliveryCancelledEvent, DeliveryCancelledEventDocument, DeliveryRiderAcceptedEvent, DeliveryConfirmedEventDocument, DeliveryCreatedEvent, DeliveryCreatedEventDocument, DeliveryRiderDropoffEvent, DeliveryDroppedOffEventDocument, DeliveryRiderPickupEvent, DeliveryPickedUpEventDocument, DeliveryRiderPickupEventSchema, DeliveryProblemEvent, DeliveryProblemEventDocument, DeliveryRiderCancelEvent, DeliveryRiderCancelledEventDocument } from './events/delivery/delivery-events.schema'
 import {
   RiderCreatedEvent,
   RiderCreatedEventDocument,
@@ -19,11 +19,11 @@ export class EventService {
     @InjectModel(UserCreatedEvent.name)  private userCreatedModel: Model<UserCreatedEventDocument>,
     @InjectModel(RiderCreatedEvent.name) private riderCreatedModel: Model<RiderCreatedEventDocument>,
     @InjectModel(DeliveryCreatedEvent.name) private deliveryCreatedModel: Model<DeliveryCreatedEventDocument>,
-    @InjectModel(DeliveryConfirmedEvent.name) private deliveryConfirmedModel: Model<DeliveryConfirmedEventDocument>,
+    @InjectModel(DeliveryRiderAcceptedEvent.name) private deliveryConfirmedModel: Model<DeliveryConfirmedEventDocument>,
     @InjectModel(DeliveryCancelledEvent.name) private deliveryCancelledModel: Model<DeliveryCancelledEventDocument>,
-    @InjectModel(DeliveryRiderCancelledEvent.name) private deliveryRiderCancelledModel: Model<DeliveryRiderCancelledEventDocument>,
-    @InjectModel(DeliveryPickedUpEvent.name) private deliveryPickedUpModel: Model<DeliveryPickedUpEventDocument>,
-    @InjectModel(DeliveryDroppedOffEvent.name) private deliveryDroppedOffModel: Model<DeliveryDroppedOffEventDocument>,
+    @InjectModel(DeliveryRiderCancelEvent.name) private deliveryRiderCancelledModel: Model<DeliveryRiderCancelledEventDocument>,
+    @InjectModel(DeliveryRiderPickupEvent.name) private deliveryPickedUpModel: Model<DeliveryPickedUpEventDocument>,
+    @InjectModel(DeliveryRiderDropoffEvent.name) private deliveryDroppedOffModel: Model<DeliveryDroppedOffEventDocument>,
     @InjectModel(DeliveryProblemEvent.name) private deliveryProblemModel: Model<DeliveryProblemEventDocument>,
   ) {}
 
@@ -42,22 +42,22 @@ export class EventService {
     return newModel.save()
   }
 
-  async saveDeliveryRiderCancelled(event: DeliveryRiderCancelledEvent): Promise<DeliveryRiderCancelledEvent> {
+  async saveDeliveryRiderCancelled(event: DeliveryRiderCancelEvent): Promise<DeliveryRiderCancelEvent> {
     const newModel = await this.deliveryRiderCancelledModel.create(event)
     return newModel.save()
   }
 
-  async saveDeliveryCornfirmed(event: DeliveryConfirmedEvent): Promise<DeliveryConfirmedEvent> {
+  async saveDeliveryCornfirmed(event: DeliveryRiderAcceptedEvent): Promise<DeliveryRiderAcceptedEvent> {
     const newModel = await this.deliveryConfirmedModel.create(event)
     return newModel.save()
   }
 
-  async saveDeliveryPickedUp(event: DeliveryPickedUpEvent): Promise<DeliveryPickedUpEvent> {
+  async saveDeliveryPickedUp(event: DeliveryRiderPickupEvent): Promise<DeliveryRiderPickupEvent> {
     const newModel = await this.deliveryPickedUpModel.create(event)
     return newModel.save()
   }
 
-  async saveDeliveryDroppedOff(event: DeliveryDroppedOffEvent): Promise<DeliveryDroppedOffEvent> {
+  async saveDeliveryDroppedOff(event: DeliveryRiderDropoffEvent): Promise<DeliveryRiderDropoffEvent> {
     const newModel = await this.deliveryDroppedOffModel.create(event)
     return newModel.save()
   }

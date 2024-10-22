@@ -47,7 +47,7 @@ export const DeliveryCancelledEventSchema = SchemaFactory.createForClass(
 )
 
 @Schema()
-export class DeliveryRiderCancelledEvent {
+export class DeliveryRiderCancelEvent {
   kind: string
   time: Date
 
@@ -67,12 +67,12 @@ export class DeliveryRiderCancelledEvent {
   }
 }
 
-export const DeliveryRiderCancelledEventSchema = SchemaFactory.createForClass(
-  DeliveryRiderCancelledEvent,
+export const DeliveryRiderCancelEventSchema = SchemaFactory.createForClass(
+  DeliveryRiderCancelEvent,
 )
 
 @Schema()
-export class DeliveryConfirmedEvent {
+export class DeliveryRiderAcceptedEvent {
   kind: string
   time: Date
 
@@ -84,12 +84,12 @@ export class DeliveryConfirmedEvent {
   }
 }
 
-export const DeliveryConfirmedEventSchema = SchemaFactory.createForClass(
-  DeliveryConfirmedEvent,
+export const DeliveryRiderAcceptedEventSchema = SchemaFactory.createForClass(
+  DeliveryRiderAcceptedEvent,
 )
 
 @Schema()
-export class DeliveryPickedUpEvent {
+export class DeliveryRiderPickupEvent {
   kind: string
   time: Date
 
@@ -101,12 +101,12 @@ export class DeliveryPickedUpEvent {
   }
 }
 
-export const DeliveryPickedUpEventSchema = SchemaFactory.createForClass(
-  DeliveryPickedUpEvent,
+export const DeliveryRiderPickupEventSchema = SchemaFactory.createForClass(
+  DeliveryRiderPickupEvent,
 )
 
 @Schema()
-export class DeliveryDroppedOffEvent {
+export class DeliveryRiderDropoffEvent {
   kind: string
   time: Date
 
@@ -118,8 +118,8 @@ export class DeliveryDroppedOffEvent {
   }
 }
 
-export const DeliveryDroppedOffEventSchema = SchemaFactory.createForClass(
-  DeliveryDroppedOffEvent,
+export const DeliveryRiderDropoffEventSchema = SchemaFactory.createForClass(
+  DeliveryRiderDropoffEvent,
 )
 
 @Schema()
@@ -162,9 +162,9 @@ export const DeliveryRiderProblemEventSchema = SchemaFactory.createForClass(
 
 export type DeliveryCreatedEventDocument = DeliveryCreatedEvent & mongoose.Document
 export type DeliveryCancelledEventDocument = DeliveryCancelledEvent & mongoose.Document
-export type DeliveryRiderCancelledEventDocument = DeliveryRiderCancelledEvent & mongoose.Document
-export type DeliveryConfirmedEventDocument = DeliveryConfirmedEvent & mongoose.Document
-export type DeliveryPickedUpEventDocument = DeliveryPickedUpEvent & mongoose.Document
-export type DeliveryDroppedOffEventDocument = DeliveryDroppedOffEvent & mongoose.Document
+export type DeliveryRiderCancelledEventDocument = DeliveryRiderCancelEvent & mongoose.Document
+export type DeliveryConfirmedEventDocument = DeliveryRiderAcceptedEvent & mongoose.Document
+export type DeliveryPickedUpEventDocument = DeliveryRiderPickupEvent & mongoose.Document
+export type DeliveryDroppedOffEventDocument = DeliveryRiderDropoffEvent & mongoose.Document
 export type DeliveryProblemEventDocument = DeliveryProblemEvent & mongoose.Document
 export type DeliveryRiderProblemEventDocument = DeliveryRiderProblemEvent & mongoose.Document
